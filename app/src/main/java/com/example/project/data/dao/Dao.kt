@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
+import com.example.project.data.entity.Order
 import com.example.project.data.entity.Sayur
 import com.example.project.data.entity.User
 
@@ -51,4 +52,7 @@ interface UserDao {
 
     @Update
     fun updateSayur(sayur : Sayur)
+
+    @Query("SELECT * FROM `order` WHERE uid_user IN (:pemilik)")
+    fun loadOrder(pemilik: Int?): Order
 }

@@ -4,12 +4,18 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverter
+import androidx.room.TypeConverters
+import com.example.project.converter.DateConverter
+import com.example.project.converter.KeranjangListConverter
 import com.example.project.data.dao.UserDao
 import com.example.project.data.entity.Keranjang
+import com.example.project.data.entity.Order
 import com.example.project.data.entity.Sayur
 import com.example.project.data.entity.User
 
-@Database(entities = [User::class,Sayur::class,Keranjang::class], version = 2)
+@Database(entities = [User::class,Sayur::class,Keranjang::class,Order::class], version = 3)
+@TypeConverters(KeranjangListConverter::class, DateConverter::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
 
