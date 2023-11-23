@@ -1,0 +1,12 @@
+<!-- res/drawable/background_with_shadow.xml -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Background Rectangle -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/grey_cerah" />
+            <corners android:radius="6dp"/>
+        </shape>
+    </item>
+
+</layer-list>

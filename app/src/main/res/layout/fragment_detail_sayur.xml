@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".detailSayur">
+
+    <ImageView
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:id="@+id/sayurImage"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/sayurNama"
+        android:textSize="24sp"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center"
+        android:text="Nama"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/sayurHarga"
+        android:layout_marginTop="20dp"
+        android:textSize="24sp"
+        android:layout_gravity="center"
+        android:text="Harga"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/sayurBerat"
+        android:textSize="24sp"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center"
+        android:text="Berat"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/sayurStok"
+        android:textSize="24sp"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center"
+        android:text="Stok"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/sayurSold"
+        android:textSize="24sp"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center"
+        android:text="Sold"/>
+
+
+</LinearLayout>
