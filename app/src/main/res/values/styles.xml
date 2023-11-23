@@ -3,4 +3,8 @@
     <style name="CustomSeekBar" parent="Widget.AppCompat.SeekBar">
         <item name="android:progressDrawable">@drawable/custom_progress</item>
     </style>
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
+        <!-- ... other theme attributes ... -->
+        <item name="cardCornerRadius">8dp</item>
+    </style>
 </resources>

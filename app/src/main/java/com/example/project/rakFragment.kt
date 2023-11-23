@@ -10,12 +10,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.project.adapter.sayurAdapter
 import com.example.project.data.AppDatabase
 import com.example.project.data.entity.Sayur
+import com.example.project.data.entity.User
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 // TODO: Rename parameter arguments, choose names that match
@@ -64,15 +66,51 @@ class rakFragment : Fragment() {
         addButton = view.findViewById(R.id.floatingActionButton)
         val getIdUser = arguments?.getInt("uidUser")
         addButton.setOnClickListener {
-            val mFragmentManager: FragmentManager = parentFragmentManager
-            val bundle = Bundle()
-            bundle.putInt("uidUser",getIdUser ?: 0)
-            val mfAdd = addEditSayauranFragment()
-            mfAdd.arguments = bundle
-            mFragmentManager.beginTransaction().apply {
-                replace(R.id.frameContainer,mfAdd,addEditSayauranFragment::class.java.simpleName)
-                addToBackStack(null)
-                commit()
+            val user = database.userDao().loadAllByIds(getIdUser)
+            if (user.namaToko == null){
+                val builder = AlertDialog.Builder(context)
+                val inflater = LayoutInflater.from(context)
+                val dialogView = inflater.inflate(R.layout.edit_text_toko, null)
+                val editText = dialogView.findViewById<EditText>(R.id.editText)
+
+                builder.setView(dialogView)
+                    .setTitle("Masukkan nama toko anda")
+                    .setPositiveButton("OK") { dialog, _ ->
+                        val enteredText = editText.text.toString()
+                        // Do something with the entered text
+                        // For example, you can pass it to another function
+                        database.userDao().updateUser(
+                            User(
+                                getIdUser,
+                                user.fullName,
+                                user.email,
+                                user.password,
+                                user.phone,
+                                user.asalKota,
+                                user.alamat,
+                                enteredText,
+                                user.eMoney
+                            )
+                        )
+                        dialog.dismiss()
+                    }
+                    .setNegativeButton("Cancel") { dialog, _ ->
+                        dialog.dismiss()
+                    }
+
+                val alertDialog = builder.create()
+                alertDialog.show()
+            }else{
+                val mFragmentManager: FragmentManager = parentFragmentManager
+                val bundle = Bundle()
+                bundle.putInt("uidUser",getIdUser ?: 0)
+                val mfAdd = addEditSayauranFragment()
+                mfAdd.arguments = bundle
+                mFragmentManager.beginTransaction().apply {
+                    replace(R.id.frameContainer,mfAdd,addEditSayauranFragment::class.java.simpleName)
+                    addToBackStack(null)
+                    commit()
+                }
             }
         }
         mFragmentManager = parentFragmentManager

@@ -30,6 +30,8 @@ class editAccount : Fragment() {
     private lateinit var password: EditText
     private lateinit var email: EditText
     private lateinit var noTelpon: EditText
+    private lateinit var _asalKota: EditText
+    private lateinit var _alamat: EditText
     private lateinit var save: Button
     private lateinit var database: AppDatabase
 
@@ -57,6 +59,8 @@ class editAccount : Fragment() {
         password = view.findViewById(R.id.password)
         email = view.findViewById(R.id.email)
         noTelpon = view.findViewById(R.id.noTelp)
+        _asalKota = view.findViewById(R.id.asalKota)
+        _alamat = view.findViewById(R.id.alamat)
         save = view.findViewById(R.id.save)
         database = activity?.let { AppDatabase.getInstance(it.applicationContext) }!!
         val dataUser = database.userDao().loadAllByIds(getIdUser)
@@ -72,6 +76,9 @@ class editAccount : Fragment() {
                     email.text.toString(),
                     password.text.toString(),
                     noTelpon.text.toString(),
+                    _asalKota.text.toString(),
+                    _alamat.text.toString(),
+                    dataUser.namaToko,
                     dataUser.eMoney
                 )
             )

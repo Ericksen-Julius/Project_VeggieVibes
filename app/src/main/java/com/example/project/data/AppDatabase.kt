@@ -9,7 +9,7 @@ import com.example.project.data.entity.Keranjang
 import com.example.project.data.entity.Sayur
 import com.example.project.data.entity.User
 
-@Database(entities = [User::class,Sayur::class,Keranjang::class], version = 2)
+@Database(entities = [User::class,Sayur::class,Keranjang::class], version = 3)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
 

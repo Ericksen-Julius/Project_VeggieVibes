@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
+import com.example.project.data.entity.Keranjang
 import com.example.project.data.entity.Sayur
 import com.example.project.data.entity.User
 
@@ -43,6 +44,9 @@ interface UserDao {
     @Query("SELECT * FROM sayur WHERE pemilik IN (:pemilik)")
     fun loadSayurByIdPemilik(pemilik: Int?): List<Sayur>
 
+    @Query("SELECT * FROM sayur WHERE pemilik NOT IN (:pemilik)")
+    fun loadSayurSearch(pemilik: Int?): List<Sayur>
+
     @Insert
     fun insertAllSayur(vararg sayurs: Sayur)
 
@@ -51,4 +55,16 @@ interface UserDao {
 
     @Update
     fun updateSayur(sayur : Sayur)
+
+    @Query("SELECT * FROM keranjang WHERE user_id IN (:pemilik)")
+    fun loadKeranjangById(pemilik: Int?): List<Keranjang>
+    @Insert
+    fun insertAllKeranjang(vararg keranjang: Keranjang)
+
+    @Update
+    fun updateKeranjang(keranjang: Keranjang)
+    @Delete
+    fun deleteKeranjang(keranjang: Keranjang)
+
+
 }

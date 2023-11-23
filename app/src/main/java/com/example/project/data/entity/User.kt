@@ -11,5 +11,8 @@ data class User(
     @ColumnInfo(name = "email") var email : String?,
     @ColumnInfo(name = "password") var password : String?,
     @ColumnInfo(name = "phone") var phone : String?,
+    @ColumnInfo(name = "asalKota") var asalKota : String?,
+    @ColumnInfo(name = "alamat") var alamat : String?,
+    @ColumnInfo(name = "namaToko") var namaToko : String?,
     @ColumnInfo(name = "eMoney") var eMoney : Int?
 )

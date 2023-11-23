@@ -72,5 +72,27 @@ class Home : AppCompatActivity() {
                 commit()
             }
         }
+        btnSearch.setOnClickListener {
+            val bundle1 = Bundle()
+            bundle1.putInt("uidUser",uidUser)
+            val mfSearch = searchFragment()
+            mfSearch.arguments = bundle1
+            mFragmentManager.beginTransaction().apply {
+                replace(R.id.frameContainer,mfSearch,searchFragment::class.java.simpleName)
+                addToBackStack(null)
+                commit()
+            }
+        }
+        btnCart.setOnClickListener {
+            val bundle1 = Bundle()
+            bundle1.putInt("uidUser",uidUser)
+            val mfCart = cartFragment()
+            mfCart.arguments = bundle1
+            mFragmentManager.beginTransaction().apply {
+                replace(R.id.frameContainer,mfCart,cartFragment::class.java.simpleName)
+                addToBackStack(null)
+                commit()
+            }
+        }
     }
 }
