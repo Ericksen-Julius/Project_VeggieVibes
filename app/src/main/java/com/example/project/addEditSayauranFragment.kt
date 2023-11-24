@@ -113,7 +113,6 @@ class addEditSayauranFragment : Fragment() {
                 return@setOnKeyListener true
             }
             false
-
         }
         saveBtn.setOnClickListener {
             if(namaSayur.text.isNotEmpty() && hargaSayur.text.isNotEmpty() && beratSayur.text.isNotEmpty() && stokSayur.text.isNotEmpty()){

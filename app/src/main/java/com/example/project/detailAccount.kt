@@ -43,6 +43,8 @@ class detailAccount : Fragment() {
     private lateinit var emoney: TextView
     private lateinit var email: TextView
     private lateinit var noTelpon: TextView
+    private lateinit var _asalKota: TextView
+    private lateinit var _alamat: TextView
     private lateinit var edit: Button
     private lateinit var topUp: Button
     private lateinit var database: AppDatabase
@@ -73,18 +75,22 @@ class detailAccount : Fragment() {
         emoney = view.findViewById(R.id.eMoney)
         email = view.findViewById(R.id.email)
         noTelpon = view.findViewById(R.id.phone)
+        _asalKota = view.findViewById(R.id.asalKota)
+        _alamat = view.findViewById(R.id.alamat)
         edit = view.findViewById(R.id.editAccount)
         topUp = view.findViewById(R.id.topUp)
         database = activity?.let { AppDatabase.getInstance(it.applicationContext) }!!
         val data = database.userDao().loadAllByIds(getIdUser)
-        val formattedPrice = data?.eMoney?.let { formatDecimal(it) }
+        val formattedPrice = data.eMoney?.let { formatDecimal(it) }
         nama.text = "Full Name: " + data.fullName
         emoney.text = "E-money: $formattedPrice"
         email.text = "Email: " + data.email
         noTelpon.text = "No telpon: " + data.phone
+        _asalKota.text = "Asal Kota: " + data.asalKota
+        _alamat.text = "Alamat: " + data.alamat
         mFragmentManager = parentFragmentManager
         topUp.setOnClickListener {
-            showEditTextAlertDialog(requireContext(),getIdUser,data.fullName,data.email,data.password,data.phone)
+            showEditTextAlertDialog(requireContext(),getIdUser,data.fullName,data.email,data.password,data.phone,data.asalKota,data.alamat,data.namaToko)
         }
         edit.setOnClickListener {
             val bundle1 = Bundle()
@@ -102,10 +108,7 @@ class detailAccount : Fragment() {
         val decimalFormat = DecimalFormat("#,##0")
         return decimalFormat.format(number)
     }
-    private fun showEditTextAlertDialog(context: Context, idUser:Int?,nama:String?,email:String?,pass:String?,noTelpon:String?) {
-//        val editText = EditText(context)
-//        editText.hint = "100.000" // Set a hint for the EditText
-//        editText.inputType = android.text.InputType.TYPE_CLASS_NUMBER
+    private fun showEditTextAlertDialog(context: Context, idUser:Int?,nama:String?,email:String?,pass:String?,noTelpon:String?,asalKota:String?,alamat:String?,namaToko:String?) {
         val dialogView = layoutInflater.inflate(R.layout.seekbar_custom, null)
         val seekBar = dialogView.findViewById<SeekBar>(R.id.seekBar)
         seekBar.min = 10_000
@@ -120,46 +123,18 @@ class detailAccount : Fragment() {
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
-                // Called when tracking the seek bar starts
             }
 
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                // Called when tracking the seek bar stops
             }
         })
-//        totalText.setOnKeyListener { v, keyCode, event ->
-//            if (event.action == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_ENTER) {
-//                val formattedText = totalText.text.toString()
-//                var plainText : String
-//                if (formattedText.toInt() < 1000){
-//                    plainText = formattedText
-//                }else{
-//                    plainText = formattedText.replace(",", "")
-//                }
-//                val intValue = plainText.toIntOrNull()
-//                if (intValue!!<10000){
-//                    totalText.setText("10,000")
-//                    Toast.makeText(requireContext(), "Top up minimal 10 ribu", Toast.LENGTH_SHORT).show()
-//                }
-//                seekBar.progress = 10_000
-//                return@setOnKeyListener true
-//            }
-//            false
-//        }
         totalText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                // Remove existing commas and get the numeric value
                 val userInput = s.toString().replace(",", "")
-                // Format the numeric value with commas using the US locale
-                val formattedText = NumberFormat.getNumberInstance(Locale.US).format(userInput.toLong())
-
-                // Remove the TextWatcher to prevent infinite loop
                 totalText.removeTextChangedListener(this)
-
-                // Convert the formatted text to a Long and clamp it to the specified range
                 val intValue = userInput.toLongOrNull() ?: 0
                 val clampedValue = when {
                     intValue < 10000 -> {
@@ -173,13 +148,10 @@ class detailAccount : Fragment() {
                     else -> intValue
                 }
 
-                // Set the clamped value back to the EditText
                 totalText.setText(NumberFormat.getNumberInstance(Locale.US).format(clampedValue))
 
-                // Move the cursor to the end of the text
                 totalText.setSelection(totalText.text.length)
 
-                // Add the TextWatcher back
                 totalText.addTextChangedListener(this)
                 seekBar.progress = intValue.toInt()
 
@@ -206,18 +178,18 @@ class detailAccount : Fragment() {
                     email,
                     pass,
                     noTelpon,
+                    asalKota,
+                    alamat,
+                    namaToko,
                     progress
                 )
             )
             val data = database.userDao().loadAllByIds(idUser)
             this.emoney.text = "E-money: ${data.eMoney.toString()}"
-            // For example, you can display a Toast with the entered text
-            // Toast.makeText(context, "Entered Text: $enteredText", Toast.LENGTH_SHORT).show()
         }
 
         alertDialogBuilder.setNegativeButton("Cancel") { dialog: DialogInterface, which: Int ->
         }
-        // Create and show the AlertDialog
         val alertDialog = alertDialogBuilder.create()
         alertDialog.show()
     }
