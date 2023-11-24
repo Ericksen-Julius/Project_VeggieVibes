@@ -23,11 +23,12 @@ data class sayurAdapter(
         var gambarSayur: ImageView = itemView.findViewById(R.id.gambarSayur)
         var namaSayur: TextView = itemView.findViewById(R.id.namaSayur)
         var hargaSayur: TextView = itemView.findViewById(R.id.hargaSayur)
-        init{
-            itemView.setOnClickListener {
-                OnItemClickCallBack.onItemClick(layoutPosition)
-            }
-        }
+        var buttonDialog : ImageView = itemView.findViewById(R.id.menuIcon)
+//        init{
+//            itemView.setOnClickListener {
+//                OnItemClickCallBack.onItemClick(layoutPosition)
+//            }
+//        }
     }
 
     fun setOnItemClickCallBack(onItemClickCallBack: onItemClickCallBack){
@@ -58,6 +59,9 @@ data class sayurAdapter(
         val formattedPrice = sayur.harga?.let { formatDecimal(it) }
         holder.namaSayur.text = sayur.nama
         holder.hargaSayur.text = "Rp. $formattedPrice"
+        holder.buttonDialog.setOnClickListener {
+            OnItemClickCallBack.onItemClick(position)
+        }
     }
     private fun decodeImage(context: Context, filename: String): Bitmap? {
         return try {
