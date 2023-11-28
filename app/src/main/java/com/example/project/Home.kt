@@ -6,7 +6,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.FragmentManager
 
-class Home : AppCompatActivity() {
+class  Home : AppCompatActivity() {
     private lateinit var btnCart: ImageView
     private lateinit var btnHome: ImageView
     private lateinit var btnSearch: ImageView
