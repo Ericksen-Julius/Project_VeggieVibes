@@ -1,11 +1,8 @@
 package com.example.project
 
 import android.annotation.SuppressLint
-import android.graphics.Bitmap
 import android.os.Bundle
-import android.util.Log
 import android.view.KeyEvent
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,11 +11,11 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.project.adapter.sayurAdapter
 import com.example.project.adapter.searchAdapter
 import com.example.project.data.AppDatabase
 import com.example.project.data.entity.Keranjang
@@ -100,7 +97,33 @@ class searchFragment : Fragment() {
             }
             false
         }
-        addToCart(getIdUser)
+        adapterSayur.setOnItemClickCallBack(object : searchAdapter.OnItemClickCallBack {
+            override fun onItemClick(position: Int) {
+                val builder = AlertDialog.Builder(requireContext())
+                    .setTitle("Add to Cart")
+                    .setView(dialogView)
+                    .setPositiveButton("OK") { dialog, _ ->
+                        database.userDao().insertAllKeranjang(
+                            Keranjang(
+                                null,
+                                listSayur[position].uidSayur,
+                                getIdUser,
+                                textView.text.toString().toInt()
+                            )
+                        )
+                        Toast.makeText(requireContext(), "Berhasil memasukkan ke keranjang!!", Toast.LENGTH_SHORT).show()
+                        dialog.dismiss()
+                        decrementButton.text = "0"
+                    }
+                    .setNegativeButton("Cancel") { dialog, _ ->
+                        dialog.dismiss()
+                        decrementButton.text = "0"
+                    }
+                val alertDialog = builder.create()
+                alertDialog.show()
+            }
+        })
+
     }
 //    private fun getYourDataList(): List<Sayur> {
 //        // Return your list of data here
@@ -129,6 +152,7 @@ class searchFragment : Fragment() {
                         )
                         Toast.makeText(requireContext(),"Berhasil memasukkan ke keranjang!!", Toast.LENGTH_SHORT).show()
                         dialog.dismiss()
+                        addToCart(userId)
                     }
                     .setNegativeButton("Cancel") { dialog, _ ->
                         dialog.dismiss()
