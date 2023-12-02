@@ -24,14 +24,14 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="4dp"
             android:layout_weight="1"
-            android:background="@drawable/spinner_border"
+            android:backgroundTint="@color/black"
             android:padding="4dp" />
 
         <androidx.appcompat.widget.AppCompatSpinner
             android:id="@+id/kota"
+            android:backgroundTint="@color/black"
             android:padding="4dp"
             android:layout_width="match_parent"
-            android:background="@drawable/spinner_border"
             android:layout_marginEnd="4dp"
             android:layout_weight="1"
             android:layout_height="wrap_content" />
@@ -39,13 +39,13 @@
     <androidx.appcompat.widget.AppCompatSpinner
         android:id="@+id/kurir"
         android:layout_width="match_parent"
+        android:backgroundTint="@color/black"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:padding="4dp"
-        android:background="@drawable/spinner_border"
         app:layout_constraintTop_toBottomOf="@id/linearLayout"
         android:layout_height="wrap_content"/>
     <com.google.android.material.textfield.TextInputLayout
@@ -249,6 +249,47 @@
                 android:layout_weight="1"
                 android:textStyle="bold"
                 android:textColor="@color/black"
+                android:text="Cost: "/>
+            <TextView
+                android:textSize="24sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:id="@+id/cost"
+                android:textStyle="bold"
+                android:textAlignment="textEnd"
+                android:textColor="@color/black"
+                android:text="Rp 300,000"/>
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/grey_gelap"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout7"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/linearLayout6">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:orientation="horizontal">
+            <TextView
+                android:textSize="24sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textStyle="bold"
+                android:textColor="@color/black"
                 android:text="Sub Total: "/>
             <TextView
                 android:textSize="24sp"
@@ -280,7 +321,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout6" />
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout7" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
