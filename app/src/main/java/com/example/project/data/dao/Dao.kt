@@ -8,6 +8,7 @@ import androidx.room.Update
 import com.example.project.data.entity.Keranjang
 import com.example.project.data.entity.Sayur
 import com.example.project.data.entity.User
+import com.example.project.data.entity.Order
 
 @Dao
 interface UserDao {

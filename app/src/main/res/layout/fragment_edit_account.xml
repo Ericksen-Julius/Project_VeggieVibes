@@ -31,8 +31,9 @@
 
             android:id="@+id/email"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Email"
+            android:layout_height="45dp"
+            android:background="@drawable/rounded_edit_text_white"
+            android:hint="  Email"
             android:inputType="textEmailAddress"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -56,7 +57,8 @@
             android:id="@+id/password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Password"
+            android:hint="  Password"
+            android:background="@drawable/rounded_edit_text_white"
             android:inputType="textPassword" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -75,8 +77,9 @@
 
             android:id="@+id/fullname"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Full Name"
+            android:layout_height="45dp"
+            android:background="@drawable/rounded_edit_text_white"
+            android:hint="  Full Name"
             android:inputType="text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -98,9 +101,10 @@
 
             android:id="@+id/noTelp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Nomor Telpon"
+            android:layout_height="45dp"
+            android:hint="  Nomor Telpon"
             android:inputType="number"
+            android:background="@drawable/rounded_edit_text_white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView" />
@@ -121,9 +125,10 @@
 
             android:id="@+id/asalKota"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Asal Kota"
+            android:layout_height="45dp"
+            android:hint="  Asal Kota"
             android:inputType="text"
+            android:background="@drawable/rounded_edit_text_white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView" />
@@ -144,8 +149,9 @@
 
             android:id="@+id/alamat"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Alamat"
+            android:layout_height="45dp"
+            android:hint="  Alamat"
+            android:background="@drawable/rounded_edit_text_white"
             android:inputType="text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -161,6 +167,7 @@
         android:layout_marginEnd="16dp"
         android:backgroundTint="@color/mint_green"
         android:text="Save"
+        android:background="@drawable/rounded_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textInputLayout6" />

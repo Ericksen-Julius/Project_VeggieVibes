@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import com.example.project.data.AppDatabase
 
@@ -32,6 +33,7 @@ class homeFragment : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+
     }
 
     override fun onCreateView(
@@ -50,7 +52,18 @@ class homeFragment : Fragment() {
         nameTag = view.findViewById(R.id.nameUser)
         val user = database.userDao().loadAllByIds(getIdUser)
         val text = "Hi, ${user.fullName}"
+        val buyProducts = view.findViewById<Button>(R.id.btnBuyProducts)
         nameTag.text = text
+        buyProducts.setOnClickListener {
+            val mfBuyProducts = searchFragment()
+            val mFragmentManager = parentFragmentManager
+            mFragmentManager.beginTransaction().apply {
+                replace(R.id.frameContainer, mfBuyProducts, searchFragment::class.java.simpleName)
+                addToBackStack(null)
+                commit()
+            }
+
+        }
     }
 
     companion object {

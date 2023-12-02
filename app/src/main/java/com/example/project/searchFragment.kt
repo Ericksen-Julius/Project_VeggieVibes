@@ -82,8 +82,9 @@ class searchFragment : Fragment() {
         decrementButton = dialogView.findViewById(R.id.decrementButton)
         incrementButton = dialogView.findViewById(R.id.incrementButton)
         textView = dialogView.findViewById(R.id.counterTextView)
-        getData(getIdUser!!)
-//        val dataList = getDataList()
+        val userId = getIdUser ?: 0
+        getData(userId ?: return)
+
         decrementButton.setOnClickListener {
             decrementCount()
         }
@@ -100,7 +101,7 @@ class searchFragment : Fragment() {
             }
             false
         }
-        addToCart(getIdUser)
+        addToCart(userId)
     }
 //    private fun getYourDataList(): List<Sayur> {
 //        // Return your list of data here

@@ -4,9 +4,12 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
+import com.example.project.data.OnFragmentInteractionListener
 
-class  Home : AppCompatActivity() {
+class  Home : AppCompatActivity(), OnFragmentInteractionListener {
     private lateinit var btnCart: ImageView
     private lateinit var btnHome: ImageView
     private lateinit var btnSearch: ImageView
@@ -17,9 +20,16 @@ class  Home : AppCompatActivity() {
 
     private lateinit var mFragmentManager: FragmentManager
 
+
+    override fun onFragmentColorChange(color: Int) {
+        findViewById<ConstraintLayout>(R.id.wrapper).setBackgroundColor(color)
+    }
+
     fun setTitle(judul : String){
         this.judul.text = judul
     }
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

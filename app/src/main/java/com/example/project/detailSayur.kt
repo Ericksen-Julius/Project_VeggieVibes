@@ -65,7 +65,7 @@ class detailSayur : Fragment() {
         database = activity?.let { AppDatabase.getInstance(it.applicationContext) }!!
         val data = getIdSayur?.let { database.userDao().loadAllByIdsSayur(it) }
         val formattedPrice = data?.harga?.let { formatDecimal(it) }
-        nama.text = "Nama :" + data?.nama
+        nama.text = "Nama : " + data?.nama
         harga.text = "Harga: $formattedPrice"
         berat.text = "Berat: " + data?.berat.toString()
         sold.text = "Sold: " + data?.sold.toString()
