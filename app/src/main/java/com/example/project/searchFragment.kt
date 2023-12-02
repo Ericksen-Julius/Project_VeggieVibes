@@ -75,8 +75,8 @@ class searchFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapterSayur
         search = view.findViewById(R.id.searchEditText)
-        getData(getIdUser!!)
-//        val dataList = getDataList()
+        val userId = getIdUser ?: 0
+        getData(userId ?: return)
 
 
         search.setOnKeyListener { v, keyCode, event ->
@@ -87,7 +87,7 @@ class searchFragment : Fragment() {
             }
             false
         }
-        addToCart(getIdUser)
+        addToCart(userId)
 
     }
 //    private fun getYourDataList(): List<Sayur> {
