@@ -2,6 +2,7 @@ package com.example.project
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -74,20 +75,9 @@ class searchFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapterSayur
         search = view.findViewById(R.id.searchEditText)
-        val inflater = LayoutInflater.from(context)
-        dialogView = inflater.inflate(R.layout.counter, null)
-        decrementButton = dialogView.findViewById(R.id.decrementButton)
-        incrementButton = dialogView.findViewById(R.id.incrementButton)
-        textView = dialogView.findViewById(R.id.counterTextView)
         getData(getIdUser!!)
 //        val dataList = getDataList()
-        decrementButton.setOnClickListener {
-            decrementCount()
-        }
 
-        incrementButton.setOnClickListener {
-            incrementCount()
-        }
 
         search.setOnKeyListener { v, keyCode, event ->
             if (event.action == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_ENTER) {
@@ -97,32 +87,7 @@ class searchFragment : Fragment() {
             }
             false
         }
-        adapterSayur.setOnItemClickCallBack(object : searchAdapter.OnItemClickCallBack {
-            override fun onItemClick(position: Int) {
-                val builder = AlertDialog.Builder(requireContext())
-                    .setTitle("Add to Cart")
-                    .setView(dialogView)
-                    .setPositiveButton("OK") { dialog, _ ->
-                        database.userDao().insertAllKeranjang(
-                            Keranjang(
-                                null,
-                                listSayur[position].uidSayur,
-                                getIdUser,
-                                textView.text.toString().toInt()
-                            )
-                        )
-                        Toast.makeText(requireContext(), "Berhasil memasukkan ke keranjang!!", Toast.LENGTH_SHORT).show()
-                        dialog.dismiss()
-                        decrementButton.text = "0"
-                    }
-                    .setNegativeButton("Cancel") { dialog, _ ->
-                        dialog.dismiss()
-                        decrementButton.text = "0"
-                    }
-                val alertDialog = builder.create()
-                alertDialog.show()
-            }
-        })
+        addToCart(getIdUser)
 
     }
 //    private fun getYourDataList(): List<Sayur> {
@@ -138,19 +103,44 @@ class searchFragment : Fragment() {
     fun addToCart(userId: Int){
         adapterSayur.setOnItemClickCallBack(object : searchAdapter.OnItemClickCallBack {
             override fun onItemClick(position: Int) {
+                val inflater = LayoutInflater.from(context)
+                dialogView = inflater.inflate(R.layout.counter, null)
+                decrementButton = dialogView.findViewById(R.id.decrementButton)
+                incrementButton = dialogView.findViewById(R.id.incrementButton)
+                textView = dialogView.findViewById(R.id.counterTextView)
+                decrementButton.setOnClickListener {
+                    decrementCount()
+                }
+
+                incrementButton.setOnClickListener {
+                    incrementCount()
+                }
+                val keranjang = database.userDao().checkKeranjang(userId,listSayur[position].uidSayur)
                 val builder = AlertDialog.Builder(requireContext())
+                if (keranjang != null) {
+                    textView.text = keranjang.count.toString()
+                }
                 builder.setView(dialogView)
                     .setTitle("Add to Cart")
                     .setPositiveButton("OK") { dialog, _ ->
-                        database.userDao().insertAllKeranjang(
-                            Keranjang(
-                                null,
-                                listSayur[position].uidSayur,
+                        if (keranjang != null){
+                            database.userDao().updateKeranjang(
+                                textView.text.toString().toInt(),
                                 userId,
-                                textView.text.toString().toInt()
+                                listSayur[position].uidSayur!!
                             )
-                        )
-                        Toast.makeText(requireContext(),"Berhasil memasukkan ke keranjang!!", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(requireContext(),"Berhasil mengupdate isi keranjang!!", Toast.LENGTH_SHORT).show()
+                        }else{
+                            database.userDao().insertAllKeranjang(
+                                Keranjang(
+                                    null,
+                                    listSayur[position].uidSayur,
+                                    userId,
+                                    textView.text.toString().toInt()
+                                )
+                            )
+                            Toast.makeText(requireContext(),"Berhasil memasukkan ke keranjang!!", Toast.LENGTH_SHORT).show()
+                        }
                         dialog.dismiss()
                         addToCart(userId)
                     }
@@ -163,19 +153,14 @@ class searchFragment : Fragment() {
             }
         })
     }
-    private fun incrementCount() {
-        count++
-        updateCounter()
+    fun incrementCount() {
+        textView.text = (textView.text.toString().toInt() + 1).toString()
     }
 
-    private fun decrementCount() {
-        count--
-        updateCounter()
+    fun decrementCount() {
+        textView.text = (textView.text.toString().toInt() - 1).toString()
     }
 
-    private fun updateCounter() {
-        textView.text = count.toString()
-    }
     companion object {
         /**
          * Use this factory method to create a new instance of

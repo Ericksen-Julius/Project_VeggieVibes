@@ -20,16 +20,21 @@ import com.example.project.data.entity.Keranjang
 import com.example.project.data.entity.Order
 import com.example.project.data.entity.Sayur
 import com.example.project.data.entity.User
-import com.example.project.model.Province
-import com.example.project.model.ProvinceResponse
-import io.ktor.client.HttpClient
-import io.ktor.client.request.get
-import io.ktor.client.request.header
-import io.ktor.http.ContentType
-import io.ktor.http.contentType
+import com.example.project.model.city.DcCity
+import com.example.project.model.city.apiCity
+import com.example.project.model.citybyprovince.DcResponseCityByProvince
+import com.example.project.model.citybyprovince.apiCityByProvince
+import com.example.project.model.cost.DcCost
+import com.example.project.model.cost.apiCost
+import com.example.project.model.province.DcResponseProvince
+import com.example.project.model.province.apiProvince
 import kotlinx.coroutines.DelicateCoroutinesApi
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import java.text.DecimalFormat
-import java.time.LocalDate
 import java.util.Date
 
 
@@ -54,10 +59,22 @@ class checkOutPage : Fragment() {
     private lateinit var buttonCheckOut: Button
     private lateinit var database: AppDatabase
     private lateinit var _berat: TextView
+    private lateinit var _cost: TextView
     private lateinit var _harga: TextView
     private lateinit var _kotaAsal: TextView
     private lateinit var _kotaTujuan: TextView
     private lateinit var _kurir: TextView
+    private lateinit var provinsi: ArrayList<String>
+    private lateinit var provinsiId: ArrayList<String>
+    private lateinit var kotaId: ArrayList<String>
+    private lateinit var kota: ArrayList<String>
+    private lateinit var kurir: ArrayList<String>
+    private lateinit var costArray: ArrayList<Int>
+    private lateinit var cityAsalId: Array<String>
+    private lateinit var adapterProvinsi: ArrayAdapter<String>
+    private lateinit var adapterKota: ArrayAdapter<String>
+    private var idChoosen: String = "-1"
+    private var courier: String = "jne"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,31 +84,6 @@ class checkOutPage : Fragment() {
         }
     }
 
-    private suspend fun getProvinceList(apiKey: String): List<Province> {
-
-        val client = HttpClient()
-
-        val url = "https://api.rajaongkir.com/starter/province"
-//
-        Log.d("dedede","")
-        val response = client.get<ProvinceResponse>(url){
-                header("key", apiKey)
-                contentType(ContentType.Application.Json)
-            }
-        client.close()
-        Log.d("dididi",response.rajaongkir.results[0].province)
-
-        return response.rajaongkir.results
-//        var prov = ArrayList<Province>()
-//        prov.add(Province("1","2"))
-//        return prov
-//        Log.d("cui", response.toString())
-//        client.close()
-//        return response.rajaongkir.results
-
-
-
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -101,25 +93,176 @@ class checkOutPage : Fragment() {
         return inflater.inflate(R.layout.fragment_check_out_page, container, false)
     }
 
+    object ApiProvince {
+        const val baseURL: String = "https://api.rajaongkir.com/starter/"
+
+        val retrofit: Retrofit = Retrofit.Builder()
+            .baseUrl(baseURL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        val apiService = retrofit.create<apiProvince>(apiProvince::class.java)
+
+    }
+
+    object ApiCity {
+        const val baseURL: String = "https://api.rajaongkir.com/starter/"
+
+        val retrofit: Retrofit = Retrofit.Builder()
+            .baseUrl(baseURL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        val apiService = retrofit.create<apiCity>(apiCity::class.java)
+
+    }
+
+
+    object ApiCityByProvince {
+        const val baseURL: String = "https://api.rajaongkir.com/starter/"
+
+        val retrofit: Retrofit = Retrofit.Builder()
+            .baseUrl(baseURL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        val apiService = retrofit.create<apiCityByProvince>(apiCityByProvince::class.java)
+
+    }
+
+    object ApiCost {
+        const val baseURL: String = "https://api.rajaongkir.com/starter/"
+
+        val retrofit: Retrofit = Retrofit.Builder()
+            .baseUrl(baseURL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        val apiService = retrofit.create<apiCost>(apiCost::class.java)
+
+    }
+
+    fun getCost(origin : String,destination: String, weight:Int, kurir: String){
+        Log.d("huhu", "taikk")
+        var callApi = ApiCost.apiService.getCost(origin,destination,weight,kurir)
+        callApi.enqueue(object : Callback<DcCost> {
+            override fun onResponse(
+                call: Call<DcCost>,
+                response: Response<DcCost>
+            ) {
+                if (response.isSuccessful){
+                    val hasil_cost = response.body()
+                    for (x in hasil_cost!!.rajaongkir!!.results?.get(0)!!.costs!!){
+                        if (x != null) {
+                            x.cost!![0]!!.value?.let { costArray.add(it) }
+                            Log.d("Cost", x.cost[0]!!.value.toString())
+                        }
+                    }
+                }
+            }
+            override fun onFailure(call: Call<DcCost>, t: Throwable) {
+                Log.d("gagal","hoyyy")
+            }
+
+        })
+    }
+
+    fun getDataCity(idProvince : String){
+        kota.clear()
+        kotaId.clear()
+        idChoosen = "-1"
+        adapterKota.clear()
+        var callApi = ApiCityByProvince.apiService.getCity(idProvince)
+        callApi.enqueue(object : Callback<DcResponseCityByProvince> {
+            override fun onResponse(
+                call: Call<DcResponseCityByProvince>,
+                response: Response<DcResponseCityByProvince>
+            ) {
+                if (response.isSuccessful){
+                    val hasil_Provinsi = response.body()
+                    for (x in hasil_Provinsi!!.rajaongkir!!.results!!){
+                        if (x != null) {
+                            x.cityName?.let { kota.add(it) }
+                            x.cityId?.let { kotaId.add(it) }
+                        }
+                    }
+                    adapterKota.addAll(kota)
+                    adapterKota.notifyDataSetChanged()
+                }
+            }
+
+            override fun onFailure(call: Call<DcResponseCityByProvince>, t: Throwable) {
+                Log.d("gagal","hoyyy")
+            }
+
+        })
+    }
+
+
+    fun getDataProvince(){
+        var callApi = ApiProvince.apiService.getProvince()
+        callApi.enqueue(object : Callback<DcResponseProvince> {
+            override fun onResponse(
+                call: Call<DcResponseProvince>,
+                response: Response<DcResponseProvince>
+            ) {
+                if (response.isSuccessful){
+                    val hasil_Provinsi = response.body()
+                    for (x in hasil_Provinsi!!.rajaongkir!!.results!!){
+                        if (x != null) {
+                            x.province?.let { provinsi.add(it) }
+                            x.provinceId?.let { provinsiId.add(it) }
+                        }
+                    }
+                    adapterProvinsi= ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, provinsi)
+                    spinnerProvinsi.adapter = adapterProvinsi
+                    getDataCity("1")
+                }
+            }
+
+            override fun onFailure(call: Call<DcResponseProvince>, t: Throwable) {
+                Log.d("gagal","hoyyy")
+            }
+
+        })
+    }
+    fun  getCity(arrayCity: ArrayList<String>){
+        var callApi = ApiCity.apiService.getCityALl()
+        callApi.enqueue(object : Callback<DcCity> {
+            override fun onResponse(
+                call: Call<DcCity>,
+                response: Response<DcCity>
+            ) {
+                if (response.isSuccessful){
+                    val hasil_city = response.body()
+                    for (x in hasil_city!!.rajaongkir!!.results!!){
+                        if (!cityAsalId.contains("")){
+                            return
+                        }
+                        if (x != null) {
+                            if(arrayCity.contains(x.cityName)){
+                                val tmp2 = arrayCity.indexOf(x.cityName)
+                                cityAsalId[tmp2] = x.cityId.toString()
+                            }
+                        }else{
+                            Log.d("gagal2","hoyyy")
+                        }
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<DcCity>, t: Throwable) {
+                Log.d("gagal","hoyyy")
+            }
+
+        })
+    }
+
     @OptIn(DelicateCoroutinesApi::class)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         (super.requireActivity() as Home).setTitle("Checkout Page")
-//        val provinces = runBlocking {
-//            getProvinceList("76f567ee91df772c42426d5af9987622")
-//        }
-//        provinces.forEach {
-//            Log.d("hey","${it.provinceId}: ${it.provinceName}")
-//        }
-//        GlobalScope.launch(Dispatchers.Main) {
-//            val result = getProvinceList("f58c67748981e1cdd34832549247109e")
-//            for (x in result){
-//                Log.d(x.provinceId,x.provinceName)
-//            }
-//        }
-        val provinsi = arrayListOf<String>("Jawa Timur","Jawa Tengah","Jawa Barat","Jakarta")
-        val kota = arrayListOf<String>("Surabaya","Jakarta Pusat","Malang","Mojokerto")
-        val kurir = arrayListOf<String>("JNE","TIKI","POST")
+
 
         spinnerProvinsi = view.findViewById(R.id.provinsi)
         spinnerKota = view.findViewById(R.id.kota)
@@ -129,28 +272,21 @@ class checkOutPage : Fragment() {
         _kotaAsal = view.findViewById(R.id.origin)
         _kotaTujuan = view.findViewById(R.id.destination)
         _kurir = view.findViewById(R.id.kurirText)
+        _cost = view.findViewById(R.id.cost)
         database = activity?.let { AppDatabase.getInstance(it.applicationContext) }!!
         buttonCheckOut = view.findViewById(R.id.checkout)
 
+        provinsi = arrayListOf()
+        provinsiId = arrayListOf()
+        kota = arrayListOf()
+        kotaId = arrayListOf()
+        costArray = arrayListOf()
+        kurir = arrayListOf("JNE","POST","TIKI")
+        adapterKota= ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, kota)
+        spinnerKota.adapter = adapterKota
 
-        ArrayAdapter<String>(
-            requireContext(),
-            android.R.layout.simple_spinner_item,
-            provinsi
-        ).also { adapter ->
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            // Apply the adapter to the spinner
-            spinnerProvinsi.adapter = adapter
-        }
-        ArrayAdapter<String>(
-            requireContext(),
-            android.R.layout.simple_spinner_item,
-            kota
-        ).also { adapter ->
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            // Apply the adapter to the spinner
-            spinnerKota.adapter = adapter
-        }
+        getDataProvince()
+
         ArrayAdapter<String>(
             requireContext(),
             android.R.layout.simple_spinner_item,
@@ -160,10 +296,12 @@ class checkOutPage : Fragment() {
             // Apply the adapter to the spinner
             spinnerKurir.adapter = adapter
         }
+
+
         val getIdUser = arguments?.getInt("uidUser")
         database = activity?.let { AppDatabase.getInstance(it.applicationContext) }!!
         val dataKeranjang = database.userDao().loadKeranjangById(getIdUser)
-        var kotaTujuan = ArrayList<String>()
+        var kotaAsal = ArrayList<String>()
         var date = Date()
         var totalWeight = ArrayList<Int>()
         var totalPrice = ArrayList<Int>()
@@ -176,8 +314,8 @@ class checkOutPage : Fragment() {
             val dataPemilik = database.userDao().loadAllByIds(dataSayur.pemilik)
             sayurIdKeranjang.add(x.sayur_id!!)
             totalSold.add(x.count!!)
-            if (!kotaTujuan.contains(dataPemilik.asalKota)){
-                dataPemilik.asalKota?.let { kotaTujuan.add(it) }
+            if (!kotaAsal.contains(dataPemilik.asalKota)){
+                dataPemilik.asalKota?.let { kotaAsal.add(it) }
                 totalWeight.add(x.count?.let { dataSayur.berat?.times(it) } ?: 0)
                 totalPrice.add(x.count?.let { dataSayur.harga?.times(it) } ?: 0)
             }else{
@@ -192,14 +330,31 @@ class checkOutPage : Fragment() {
             weightTotal += x.count?.let { dataSayur.berat?.times(it) } ?: 0
         }
         var kotaText = ""
-        kotaText = if (kotaTujuan.size == 1){
-            kotaTujuan[0]
+        kotaText = if (kotaAsal.size == 1){
+            kotaAsal[0]
         }else{
-            "${kotaTujuan.size} kota asal"
+            "${kotaAsal.size} kota asal"
         }
-        _kotaAsal.text = date.toString()
+        cityAsalId = Array(kotaAsal.size){""}
+        _kotaAsal.text = kotaText
         _harga.text = "Rp.${formatDecimal(subTotal)}"
         _berat.text = "${formatDecimal(weightTotal)} Gram"
+        getCity(kotaAsal)
+        spinnerProvinsi.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                getDataCity(provinsiId[position])
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                TODO("Not yet implemented")
+            }
+
+        }
         spinnerKota.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parentView: AdapterView<*>?,
@@ -207,7 +362,18 @@ class checkOutPage : Fragment() {
                 position: Int,
                 id: Long
             ) {
+                idChoosen = kotaId[position]
                 _kotaTujuan.text = kota[position]
+                costArray.clear()
+                for (x in kotaAsal.indices){
+                    Log.d("chekk",cityAsalId[x])
+                    Log.d("chekk2", idChoosen)
+                    Log.d("chekk3", totalWeight[x].toString())
+                    Log.d("chekk4", _kurir.text.toString())
+                    getCost(cityAsalId[x],idChoosen,totalWeight[x],_kurir.text.toString().toLowerCase())
+                }
+                _cost.text = "Rp.${costArray.sum()}"
+                _harga.text = "Rp.${formatDecimal(subTotal + costArray.sum())}"
             }
 
             override fun onNothingSelected(parentView: AdapterView<*>?) {
@@ -222,6 +388,7 @@ class checkOutPage : Fragment() {
                 id: Long
             ) {
                 _kurir.text = kurir[position]
+                courier = kurir[position]
             }
 
             override fun onNothingSelected(parentView: AdapterView<*>?) {
@@ -229,15 +396,17 @@ class checkOutPage : Fragment() {
             }
         }
         buttonCheckOut.setOnClickListener {
-            checkOnClick(getIdUser,kotaTujuan,totalPrice,totalWeight,dataKeranjang,sayurIdKeranjang,totalSold)
+            checkOnClick(getIdUser,cityAsalId,totalPrice,totalWeight,costArray,dataKeranjang,sayurIdKeranjang,totalSold)
         }
 
     }
 
     fun checkOnClick(
         idUser:Int?,
-        array1: ArrayList<String>,
-        array2:ArrayList<Int>, array3: ArrayList<Int>,
+        array1: Array<String>,
+        array2:ArrayList<Int>,
+        array3: ArrayList<Int>,
+        arrayCost: ArrayList<Int>,
         dataKeranjang: List<Keranjang>,
         idSayur: ArrayList<Int>,
         totalSold: ArrayList<Int>
@@ -248,21 +417,22 @@ class checkOutPage : Fragment() {
             textMessage += "${x+1}.\n" +
                     "Asal kota: ${array1[x]}\n"+
                     "Harga: Rp.${formatDecimal(array2[x])}\n"+
-                    "Berat: ${formatDecimal(array3[x])} Gram\n"
+                    "Berat: ${formatDecimal(array3[x])} Gram\n"+
+                    "Cost: Rp.${formatDecimal(arrayCost[x])}\n"
         }
         alertDialogBuilder.setTitle("Checkout Dialog")
         alertDialogBuilder.setMessage(textMessage)
         val currentDate = Date()
         alertDialogBuilder.setPositiveButton("Checkout") { dialog: DialogInterface, which: Int ->
 //            val enteredText = editText.text.toString()
-            if(database.userDao().loadAllByIds(idUser).eMoney!! >= array2.sum()){
+            if(database.userDao().loadAllByIds(idUser).eMoney!! >= array2.sum() + arrayCost.sum()){
                 database.userDao().insertAllOrder(
                     Order(
                         null,
                         dataKeranjang,
                         idUser,
                         "Shipping",
-                        array2.sum(),
+                        array2.sum() + arrayCost.sum(),
                         currentDate,
                         null
                     )
@@ -277,10 +447,13 @@ class checkOutPage : Fragment() {
                         dataSayur.berat,
                         dataSayur.harga,
                             dataSayur.sold?.plus(totalSold[x]),
-                        totalSold[x],
+                        dataSayur.stok?.minus(totalSold[x]),
                         dataSayur.gambar
                         )
                     )
+                    val dataPemilik = database.userDao().loadAllByIds(dataSayur.pemilik)
+                    database.userDao().updateEmoney(dataPemilik.eMoney!!.minus(array2.sum() + arrayCost.sum()), dataSayur.pemilik!!)
+
                 }
                 val dataUser = database.userDao().loadAllByIds(idUser)
                 database.userDao().updateUser(
