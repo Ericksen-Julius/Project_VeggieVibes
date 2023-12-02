@@ -68,6 +68,8 @@ class editAccount : Fragment() {
         password.setText(dataUser.password)
         email.setText(dataUser.email)
         noTelpon.setText(dataUser.phone)
+        _asalKota.setText(dataUser.asalKota)
+        _alamat.setText(dataUser.alamat)
         save.setOnClickListener {
             database.userDao().updateUser(
                 User(

@@ -62,7 +62,8 @@ data class cartAdapter (
         }
         holder._namaToko.text = dataPenjual.namaToko
         holder.namaSayur.text = dataSayur.nama
-        val formattedPrice = dataSayur.harga?.let { formatDecimal(it) }
+        val totalHarga = keranjang.count?.let { dataSayur.harga?.times(it) }
+        val formattedPrice = totalHarga?.let { formatDecimal(it) }
         holder.hargaSayur.text = "Rp.${formattedPrice}"
         holder.increment.setOnClickListener {
             holder.textCount.text = (holder.textCount.text.toString().toInt()+1).toString()
