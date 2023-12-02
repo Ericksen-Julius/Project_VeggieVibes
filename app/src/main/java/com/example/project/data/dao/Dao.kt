@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 import com.example.project.data.entity.Keranjang
+import com.example.project.data.entity.Order
 import com.example.project.data.entity.Sayur
 import com.example.project.data.entity.User
 
@@ -65,7 +66,6 @@ interface UserDao {
     fun updateKeranjang(keranjang: Keranjang)
     @Delete
     fun deleteKeranjang(keranjang: Keranjang)
-
 
 
     @Query("SELECT * FROM `order` WHERE uid_user IN (:pemilik)")
