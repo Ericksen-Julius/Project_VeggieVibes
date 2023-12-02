@@ -8,6 +8,7 @@ android {
     namespace = "com.example.project"
     compileSdk = 34
 
+
     defaultConfig {
         applicationId = "com.example.project"
         minSdk = 30
@@ -25,6 +26,9 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+        }
+        packagingOptions {
+            exclude( "META-INF/DEPENDENCIES")
         }
     }
     compileOptions {
@@ -47,7 +51,18 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     implementation ("androidx.cardview:cardview:1.0.0")
+    implementation("io.ktor:ktor-client-core:1.6.5")
+    implementation("io.ktor:ktor-client-json:1.6.5")
+    implementation("io.ktor:ktor-client-core:1.6.5")
+    implementation("io.ktor:ktor-client-apache:1.6.5")
+    implementation ("io.ktor:ktor-client-serialization:1.6.5")
+    implementation ("io.ktor:ktor-client-logging:1.6.5")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.1")
 
     implementation ("androidx.room:room-runtime:2.6.0")
     kapt("androidx.room:room-compiler:2.6.0")
+
+    //retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 }

@@ -171,6 +171,7 @@ class detailAccount : Fragment() {
 //            val enteredText = editText.text.toString()
             val progress = seekBar.progress
             // Do something with the entered text
+            val dataUser = database.userDao().loadAllByIds(idUser)
             database.userDao().updateUser(
                 User(
                     idUser,
@@ -181,11 +182,10 @@ class detailAccount : Fragment() {
                     asalKota,
                     alamat,
                     namaToko,
-                    progress
+                    dataUser.eMoney!!+progress
                 )
             )
-            val data = database.userDao().loadAllByIds(idUser)
-            this.emoney.text = "E-money: ${data.eMoney.toString()}"
+            this.emoney.text = "E-money: ${dataUser.eMoney?.let { formatDecimal(it) }}"
         }
 
         alertDialogBuilder.setNegativeButton("Cancel") { dialog: DialogInterface, which: Int ->
@@ -193,6 +193,7 @@ class detailAccount : Fragment() {
         val alertDialog = alertDialogBuilder.create()
         alertDialog.show()
     }
+
 
     companion object {
         /**

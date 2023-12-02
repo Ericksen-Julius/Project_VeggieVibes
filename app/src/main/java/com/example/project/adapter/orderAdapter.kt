@@ -44,7 +44,7 @@ data class orderAdapter(
         val formattedPrice = order.totalHarga?.let { formatDecimal(it) }
         val keranjangg = database.userDao().loadOrder(order.uid_user?:0)
         holder.namaToko.text = order.uidorder.toString()
-        holder.waktu.text = order.waktu.toString()
+        holder.waktu.text = order.waktuDatang.toString()
         holder.totalHarga.text = "Rp. $formattedPrice"
 
     }

@@ -13,7 +13,8 @@ data class Order (
     @ColumnInfo(name = "uid_user") var uid_user : Int?,
     @ColumnInfo(name = "status") var status : String?,
     @ColumnInfo(name = "totalHarga") var totalHarga : Int?,
-    @ColumnInfo(name = "waktu") var waktu : Date
+    @ColumnInfo(name = "waktuBeli") var waktuDatang : Date?,
+    @ColumnInfo(name = "waktuSampai") var waktuSampai : Date?
 )
 
 //object DateConverter {

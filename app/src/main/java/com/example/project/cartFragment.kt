@@ -36,6 +36,7 @@ class cartFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapterKeranjang: cartAdapter
     private lateinit var mFragmentManager: FragmentManager
+    private lateinit var buttonNext: Button
     private lateinit var database: AppDatabase
     private var listKeranjang : MutableList<Keranjang> = mutableListOf<Keranjang>()
 
@@ -60,6 +61,7 @@ class cartFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         recyclerView = view.findViewById(R.id.recyclerViewCart)
         adapterKeranjang = cartAdapter(listKeranjang)
+        buttonNext = view.findViewById(R.id.next)
         database = activity?.let { AppDatabase.getInstance(it.applicationContext) }!!
         val getIdUser = arguments?.getInt("uidUser")
         mFragmentManager = parentFragmentManager
@@ -85,7 +87,17 @@ class cartFragment : Fragment() {
                 alertDialog.show()
             }
         })
-
+        buttonNext.setOnClickListener {
+            val bundle = Bundle()
+            bundle.putInt("uidUser",getIdUser)
+            val mfRak = checkOutPage()
+            mfRak.arguments = bundle
+            mFragmentManager.beginTransaction().apply {
+                replace(R.id.frameContainer,mfRak,checkOutPage::class.java.simpleName)
+                addToBackStack(null)
+                commit()
+            }
+        }
     }
     @SuppressLint("NotifyDataSetChanged")
     fun getData(idPemilik: Int){

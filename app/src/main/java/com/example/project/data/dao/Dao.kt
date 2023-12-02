@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 import com.example.project.data.entity.Keranjang
+import com.example.project.data.entity.Order
 import com.example.project.data.entity.Sayur
 import com.example.project.data.entity.User
 import com.example.project.data.entity.Order
@@ -42,6 +43,9 @@ interface UserDao {
     @Query("SELECT * FROM sayur WHERE uidSayur IN (:sayurIds)")
     fun loadAllByIdsSayur(sayurIds: Int): Sayur
 
+    @Query("UPDATE user SET eMoney=:eMoney WHERE uid = :id")
+    fun updateEmoney(eMoney: Int, id: Int)
+
     @Query("SELECT * FROM sayur WHERE pemilik IN (:pemilik)")
     fun loadSayurByIdPemilik(pemilik: Int?): List<Sayur>
 
@@ -59,6 +63,13 @@ interface UserDao {
 
     @Query("SELECT * FROM keranjang WHERE user_id IN (:pemilik)")
     fun loadKeranjangById(pemilik: Int?): List<Keranjang>
+
+    @Query("SELECT * FROM keranjang WHERE user_id IN (:pemilik) AND sayur_id IN (:sayur)")
+    fun checkKeranjang(pemilik: Int?, sayur: Int?): Keranjang?
+
+    @Query("UPDATE keranjang SET COUNT=(:count) WHERE user_id IN (:pemilik) AND sayur_id IN (:sayur)")
+    fun updateKeranjang(count:Int?,pemilik: Int?,sayur: Int)
+
     @Insert
     fun insertAllKeranjang(vararg keranjang: Keranjang)
 
@@ -68,7 +79,10 @@ interface UserDao {
     fun deleteKeranjang(keranjang: Keranjang)
 
 
-
     @Query("SELECT * FROM `order` WHERE uid_user IN (:pemilik)")
     fun loadOrder(pemilik: Int?): Order
+
+    @Insert
+    fun insertAllOrder(vararg order: Order)
+
 }

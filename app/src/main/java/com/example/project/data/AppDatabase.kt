@@ -13,7 +13,7 @@ import com.example.project.data.entity.Order
 import com.example.project.data.entity.Sayur
 import com.example.project.data.entity.User
 
-@Database(entities = [User::class,Sayur::class,Keranjang::class, Order::class], version = 3)
+@Database(entities = [User::class,Sayur::class,Keranjang::class,Order::class], version = 6)
 @TypeConverters(DateConverter::class,KeranjangListConverter::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
