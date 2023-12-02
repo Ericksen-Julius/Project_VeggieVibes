@@ -302,7 +302,6 @@ class checkOutPage : Fragment() {
         database = activity?.let { AppDatabase.getInstance(it.applicationContext) }!!
         val dataKeranjang = database.userDao().loadKeranjangById(getIdUser)
         var kotaAsal = ArrayList<String>()
-        var date = Date()
         var totalWeight = ArrayList<Int>()
         var totalPrice = ArrayList<Int>()
         var sayurIdKeranjang = ArrayList<Int>()
@@ -390,7 +389,6 @@ class checkOutPage : Fragment() {
                 _kurir.text = kurir[position]
                 courier = kurir[position]
             }
-
             override fun onNothingSelected(parentView: AdapterView<*>?) {
 
             }
@@ -398,7 +396,6 @@ class checkOutPage : Fragment() {
         buttonCheckOut.setOnClickListener {
             checkOnClick(getIdUser,cityAsalId,totalPrice,totalWeight,costArray,dataKeranjang,sayurIdKeranjang,totalSold)
         }
-
     }
 
     fun checkOnClick(
