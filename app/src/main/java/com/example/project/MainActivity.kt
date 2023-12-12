@@ -33,6 +33,7 @@ class MainActivity : AppCompatActivity() {
                 val intent = Intent(this,Home::class.java)
                 intent.putExtra("idUser",user.uid)
                 startActivity(intent)
+                this.finish()
             }else{
                 Toast.makeText(applicationContext,"Data tidak valid!!", Toast.LENGTH_SHORT).show()
             }
