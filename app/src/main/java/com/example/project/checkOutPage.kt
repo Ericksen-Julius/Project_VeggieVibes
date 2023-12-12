@@ -452,8 +452,7 @@ class checkOutPage : Fragment() {
                         )
                     )
                     val dataPemilik = database.userDao().loadAllByIds(dataSayur.pemilik)
-                    database.userDao().updateEmoney(dataPemilik.eMoney!!.minus(array2.sum() + arrayCost.sum()), dataSayur.pemilik!!)
-
+                    database.userDao().updateEmoney(dataPemilik.eMoney!!.plus(array2.sum()), dataSayur.pemilik!!)
                 }
                 val dataUser = database.userDao().loadAllByIds(idUser)
                 database.userDao().updateUser(
@@ -466,7 +465,7 @@ class checkOutPage : Fragment() {
                         dataUser.asalKota,
                         dataUser.alamat,
                         dataUser.namaToko,
-                        dataUser.eMoney?.minus(array2.sum())
+                        dataUser.eMoney?.minus(array2.sum() + arrayCost.sum())
                     )
                 )
                 val idKeranjang = database.userDao().loadKeranjangById(idUser)
