@@ -1,5 +1,7 @@
 package com.example.project
 
+import PABA.UAS.C14210151.model.cost.DcCost
+import PABA.UAS.C14210151.model.cost.costModel
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.os.Bundle
@@ -10,9 +12,12 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.ProgressBar
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.widget.ContentLoadingProgressBar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.example.project.data.AppDatabase
@@ -24,7 +29,6 @@ import com.example.project.model.city.DcCity
 import com.example.project.model.city.apiCity
 import com.example.project.model.citybyprovince.DcResponseCityByProvince
 import com.example.project.model.citybyprovince.apiCityByProvince
-import com.example.project.model.cost.DcCost
 import com.example.project.model.cost.apiCost
 import com.example.project.model.province.DcResponseProvince
 import com.example.project.model.province.apiProvince
@@ -64,6 +68,10 @@ class checkOutPage : Fragment() {
     private lateinit var _kotaAsal: TextView
     private lateinit var _kotaTujuan: TextView
     private lateinit var _kurir: TextView
+    private lateinit var root: ConstraintLayout
+    private lateinit var dialogView : View
+    private lateinit var alertDialog: androidx.appcompat.app.AlertDialog
+    private lateinit var loading: ProgressBar
     private lateinit var provinsi: ArrayList<String>
     private lateinit var provinsiId: ArrayList<String>
     private lateinit var kotaId: ArrayList<String>
@@ -144,7 +152,7 @@ class checkOutPage : Fragment() {
 
     fun getCost(origin : String,destination: String, weight:Int, kurir: String){
         Log.d("huhu", "taikk")
-        var callApi = ApiCost.apiService.getCost(origin,destination,weight,kurir)
+        var callApi = ApiCost.apiService.getCost(costModel( origin,destination,weight,kurir))
         callApi.enqueue(object : Callback<DcCost> {
             override fun onResponse(
                 call: Call<DcCost>,
@@ -156,6 +164,10 @@ class checkOutPage : Fragment() {
                         if (x != null) {
                             x.cost!![0]!!.value?.let { costArray.add(it) }
                             Log.d("Cost", x.cost[0]!!.value.toString())
+                            break
+                        }
+                        if (origin == cityAsalId[cityAsalId.size-1]){
+                            unshowLoading()
                         }
                     }
                 }
@@ -188,6 +200,7 @@ class checkOutPage : Fragment() {
                     }
                     adapterKota.addAll(kota)
                     adapterKota.notifyDataSetChanged()
+                    unshowLoading()
                 }
             }
 
@@ -250,20 +263,29 @@ class checkOutPage : Fragment() {
                     }
                 }
             }
-
             override fun onFailure(call: Call<DcCity>, t: Throwable) {
                 Log.d("gagal","hoyyy")
             }
-
         })
+    }
+
+    fun unshowLoading(){
+        alertDialog.dismiss()
+    }
+    fun showLoading(){
+        val inflater = LayoutInflater.from(context)
+        dialogView = inflater.inflate(R.layout.loading_bar, null)
+        val builder = androidx.appcompat.app.AlertDialog.Builder(requireContext())
+        builder.setView(dialogView)
+        alertDialog = builder.create()
+        alertDialog.show()
     }
 
     @OptIn(DelicateCoroutinesApi::class)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         (super.requireActivity() as Home).setTitle("Checkout Page")
-
-
+        root = view.findViewById(R.id.rootCheckOut)
         spinnerProvinsi = view.findViewById(R.id.provinsi)
         spinnerKota = view.findViewById(R.id.kota)
         spinnerKurir = view.findViewById(R.id.kurir)
@@ -275,7 +297,6 @@ class checkOutPage : Fragment() {
         _cost = view.findViewById(R.id.cost)
         database = activity?.let { AppDatabase.getInstance(it.applicationContext) }!!
         buttonCheckOut = view.findViewById(R.id.checkout)
-
         provinsi = arrayListOf()
         provinsiId = arrayListOf()
         kota = arrayListOf()
@@ -285,6 +306,7 @@ class checkOutPage : Fragment() {
         adapterKota= ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, kota)
         spinnerKota.adapter = adapterKota
 
+        showLoading()
         getDataProvince()
 
         ArrayAdapter<String>(
@@ -347,6 +369,7 @@ class checkOutPage : Fragment() {
                 id: Long
             ) {
                 getDataCity(provinsiId[position])
+                showLoading()
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -364,6 +387,7 @@ class checkOutPage : Fragment() {
                 idChoosen = kotaId[position]
                 _kotaTujuan.text = kota[position]
                 costArray.clear()
+                showLoading()
                 for (x in kotaAsal.indices){
                     Log.d("chekk",cityAsalId[x])
                     Log.d("chekk2", idChoosen)

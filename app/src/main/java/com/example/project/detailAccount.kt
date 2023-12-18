@@ -99,7 +99,7 @@ class detailAccount : Fragment() {
         _alamat.text = data.alamat
         mFragmentManager = parentFragmentManager
         topUp.setOnClickListener {
-            showEditTextAlertDialog(requireContext(),getIdUser,data.fullName,data.email,data.password,data.phone,data.asalKota,data.alamat,data.namaToko)
+            showEditTextAlertDialog(requireContext(),getIdUser,data.fullName,data.email,data.password,data.phone, data.asalKota,data.alamat, data.namaToko)
         }
         edit.setOnClickListener {
             val bundle1 = Bundle()
@@ -172,7 +172,7 @@ class detailAccount : Fragment() {
         val decimalFormat = DecimalFormat("#,##0")
         return decimalFormat.format(number)
     }
-    private fun showEditTextAlertDialog(context: Context, idUser:Int?,nama:String?,email:String?,pass:String?,noTelpon:String?,asalKota:String?,alamat:String?,namaToko:String?) {
+    private fun showEditTextAlertDialog(context: Context, idUser:Int?,nama:String?,email:String?,pass:String?,noTelpon:String?, asalKota:String?,alamat:String?,namaToko:String?) {
         val dialogView = layoutInflater.inflate(R.layout.seekbar_custom, null)
         val seekBar = dialogView.findViewById<SeekBar>(R.id.seekBar)
         seekBar.min = 10_000

@@ -46,6 +46,9 @@ interface UserDao {
     @Query("UPDATE user SET eMoney=:eMoney WHERE uid = :id")
     fun updateEmoney(eMoney: Int, id: Int)
 
+    @Query("UPDATE user SET namaToko=:namaToko WHERE uid = :id")
+    fun updateToko(namaToko: String, id: Int)
+
     @Query("SELECT * FROM sayur WHERE pemilik IN (:pemilik)")
     fun loadSayurByIdPemilik(pemilik: Int?): List<Sayur>
 
