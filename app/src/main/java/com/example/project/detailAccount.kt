@@ -250,6 +250,7 @@ class detailAccount : Fragment() {
                 )
             )
             dataUser = database.userDao().loadAllByIds(idUser)
+            Toast.makeText(requireContext(),"Berhasil Top Up!!",Toast.LENGTH_SHORT).show()
             this.emoney.text = "E-money: ${dataUser.eMoney?.let { formatDecimal(it) }}"
         }
 

@@ -17,7 +17,6 @@ import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.widget.ContentLoadingProgressBar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.example.project.data.AppDatabase
@@ -83,6 +82,7 @@ class checkOutPage : Fragment() {
     private lateinit var adapterKota: ArrayAdapter<String>
     private var idChoosen: String = "-1"
     private var courier: String = "jne"
+    var subTotal = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -151,7 +151,7 @@ class checkOutPage : Fragment() {
     }
 
     fun getCost(origin : String,destination: String, weight:Int, kurir: String){
-        Log.d("huhu", "taikk")
+        showLoading()
         var callApi = ApiCost.apiService.getCost(costModel( origin,destination,weight,kurir))
         callApi.enqueue(object : Callback<DcCost> {
             override fun onResponse(
@@ -163,11 +163,12 @@ class checkOutPage : Fragment() {
                     for (x in hasil_cost!!.rajaongkir!!.results?.get(0)!!.costs!!){
                         if (x != null) {
                             x.cost!![0]!!.value?.let { costArray.add(it) }
-                            Log.d("Cost", x.cost[0]!!.value.toString())
-                            break
                         }
                         if (origin == cityAsalId[cityAsalId.size-1]){
+                            _cost.text = "Rp.${formatDecimal(costArray.sum())}"
+                            _harga.text = "Rp.${formatDecimal(subTotal + costArray.sum())}"
                             unshowLoading()
+                            return
                         }
                     }
                 }
@@ -180,6 +181,7 @@ class checkOutPage : Fragment() {
     }
 
     fun getDataCity(idProvince : String){
+        showLoading()
         kota.clear()
         kotaId.clear()
         idChoosen = "-1"
@@ -213,6 +215,7 @@ class checkOutPage : Fragment() {
 
 
     fun getDataProvince(){
+        showLoading()
         var callApi = ApiProvince.apiService.getProvince()
         callApi.enqueue(object : Callback<DcResponseProvince> {
             override fun onResponse(
@@ -229,6 +232,7 @@ class checkOutPage : Fragment() {
                     }
                     adapterProvinsi= ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, provinsi)
                     spinnerProvinsi.adapter = adapterProvinsi
+                    unshowLoading()
                     getDataCity("1")
                 }
             }
@@ -239,7 +243,7 @@ class checkOutPage : Fragment() {
 
         })
     }
-    fun  getCity(arrayCity: ArrayList<String>){
+    fun getCity(arrayCity: ArrayList<String>){
         var callApi = ApiCity.apiService.getCityALl()
         callApi.enqueue(object : Callback<DcCity> {
             override fun onResponse(
@@ -250,11 +254,14 @@ class checkOutPage : Fragment() {
                     val hasil_city = response.body()
                     for (x in hasil_city!!.rajaongkir!!.results!!){
                         if (!cityAsalId.contains("")){
+                            Log.d("Kota ditemukan 2", cityAsalId.toString())
                             return
                         }
                         if (x != null) {
                             if(arrayCity.contains(x.cityName)){
+                                x.cityName?.let { Log.d("Kota ditemukan", it) }
                                 val tmp2 = arrayCity.indexOf(x.cityName)
+                                Log.d("Index ditemukan", tmp2.toString())
                                 cityAsalId[tmp2] = x.cityId.toString()
                             }
                         }else{
@@ -270,14 +277,10 @@ class checkOutPage : Fragment() {
     }
 
     fun unshowLoading(){
+        Log.d("cuyy","dismiss")
         alertDialog.dismiss()
     }
     fun showLoading(){
-        val inflater = LayoutInflater.from(context)
-        dialogView = inflater.inflate(R.layout.loading_bar, null)
-        val builder = androidx.appcompat.app.AlertDialog.Builder(requireContext())
-        builder.setView(dialogView)
-        alertDialog = builder.create()
         alertDialog.show()
     }
 
@@ -285,41 +288,6 @@ class checkOutPage : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         (super.requireActivity() as Home).setTitle("Checkout Page")
-        root = view.findViewById(R.id.rootCheckOut)
-        spinnerProvinsi = view.findViewById(R.id.provinsi)
-        spinnerKota = view.findViewById(R.id.kota)
-        spinnerKurir = view.findViewById(R.id.kurir)
-        _berat = view.findViewById(R.id.berat)
-        _harga = view.findViewById(R.id.totalHarga)
-        _kotaAsal = view.findViewById(R.id.origin)
-        _kotaTujuan = view.findViewById(R.id.destination)
-        _kurir = view.findViewById(R.id.kurirText)
-        _cost = view.findViewById(R.id.cost)
-        database = activity?.let { AppDatabase.getInstance(it.applicationContext) }!!
-        buttonCheckOut = view.findViewById(R.id.checkout)
-        provinsi = arrayListOf()
-        provinsiId = arrayListOf()
-        kota = arrayListOf()
-        kotaId = arrayListOf()
-        costArray = arrayListOf()
-        kurir = arrayListOf("JNE","POST","TIKI")
-        adapterKota= ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, kota)
-        spinnerKota.adapter = adapterKota
-
-        showLoading()
-        getDataProvince()
-
-        ArrayAdapter<String>(
-            requireContext(),
-            android.R.layout.simple_spinner_item,
-            kurir
-        ).also { adapter ->
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            // Apply the adapter to the spinner
-            spinnerKurir.adapter = adapter
-        }
-
-
         val getIdUser = arguments?.getInt("uidUser")
         database = activity?.let { AppDatabase.getInstance(it.applicationContext) }!!
         val dataKeranjang = database.userDao().loadKeranjangById(getIdUser)
@@ -328,7 +296,7 @@ class checkOutPage : Fragment() {
         var totalPrice = ArrayList<Int>()
         var sayurIdKeranjang = ArrayList<Int>()
         var totalSold = ArrayList<Int>()
-        var subTotal = 0
+
         var weightTotal = 0
         for (x in dataKeranjang){
             val dataSayur = database.userDao().loadAllByIdsSayur(x.sayur_id!!)
@@ -357,10 +325,51 @@ class checkOutPage : Fragment() {
             "${kotaAsal.size} kota asal"
         }
         cityAsalId = Array(kotaAsal.size){""}
+        getCity(kotaAsal)
+        Log.d("check city asal",cityAsalId.toString())
+        root = view.findViewById(R.id.rootCheckOut)
+        spinnerProvinsi = view.findViewById(R.id.provinsi)
+        spinnerKota = view.findViewById(R.id.kota)
+        spinnerKurir = view.findViewById(R.id.kurir)
+        _berat = view.findViewById(R.id.berat)
+        _harga = view.findViewById(R.id.totalHarga)
+        _kotaAsal = view.findViewById(R.id.origin)
+        _kotaTujuan = view.findViewById(R.id.destination)
+        _kurir = view.findViewById(R.id.kurirText)
+        _cost = view.findViewById(R.id.cost)
+        database = activity?.let { AppDatabase.getInstance(it.applicationContext) }!!
+        buttonCheckOut = view.findViewById(R.id.checkout)
+        provinsi = arrayListOf()
+        provinsiId = arrayListOf()
+        kota = arrayListOf()
+        kotaId = arrayListOf()
+        costArray = arrayListOf()
+        kurir = arrayListOf("JNE","POST","TIKI")
+        adapterKota= ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, kota)
+        spinnerKota.adapter = adapterKota
+        val inflater = LayoutInflater.from(context)
+        dialogView = inflater.inflate(R.layout.loading_bar, null)
+        val builder = androidx.appcompat.app.AlertDialog.Builder(requireContext())
+        builder.setView(dialogView)
+        alertDialog = builder.create()
+
+        getDataProvince()
+
+        ArrayAdapter<String>(
+            requireContext(),
+            android.R.layout.simple_spinner_item,
+            kurir
+        ).also { adapter ->
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            // Apply the adapter to the spinner
+            spinnerKurir.adapter = adapter
+        }
+
+
         _kotaAsal.text = kotaText
         _harga.text = "Rp.${formatDecimal(subTotal)}"
         _berat.text = "${formatDecimal(weightTotal)} Gram"
-        getCity(kotaAsal)
+        Log.d("Array kota",kotaAsal.toString())
         spinnerProvinsi.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
             override fun onItemSelected(
                 parent: AdapterView<*>?,
@@ -369,7 +378,6 @@ class checkOutPage : Fragment() {
                 id: Long
             ) {
                 getDataCity(provinsiId[position])
-                showLoading()
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -387,7 +395,7 @@ class checkOutPage : Fragment() {
                 idChoosen = kotaId[position]
                 _kotaTujuan.text = kota[position]
                 costArray.clear()
-                showLoading()
+//                showLoading()
                 for (x in kotaAsal.indices){
                     Log.d("chekk",cityAsalId[x])
                     Log.d("chekk2", idChoosen)
@@ -395,8 +403,7 @@ class checkOutPage : Fragment() {
                     Log.d("chekk4", _kurir.text.toString())
                     getCost(cityAsalId[x],idChoosen,totalWeight[x],_kurir.text.toString().toLowerCase())
                 }
-                _cost.text = "Rp.${costArray.sum()}"
-                _harga.text = "Rp.${formatDecimal(subTotal + costArray.sum())}"
+
             }
 
             override fun onNothingSelected(parentView: AdapterView<*>?) {
@@ -418,13 +425,13 @@ class checkOutPage : Fragment() {
             }
         }
         buttonCheckOut.setOnClickListener {
-            checkOnClick(getIdUser,cityAsalId,totalPrice,totalWeight,costArray,dataKeranjang,sayurIdKeranjang,totalSold)
+            checkOnClick(getIdUser,kotaAsal,totalPrice,totalWeight,costArray,dataKeranjang,sayurIdKeranjang,totalSold)
         }
     }
 
     fun checkOnClick(
         idUser:Int?,
-        array1: Array<String>,
+        array1: ArrayList<String>,
         array2:ArrayList<Int>,
         array3: ArrayList<Int>,
         arrayCost: ArrayList<Int>,
@@ -437,9 +444,9 @@ class checkOutPage : Fragment() {
         for (x in array1.indices){
             textMessage += "${x+1}.\n" +
                     "Asal kota: ${array1[x]}\n"+
-                    "Harga: Rp.${formatDecimal(array2[x])}\n"+
+                    "Harga: ${formatDecimal(array2[x])}\n"+
                     "Berat: ${formatDecimal(array3[x])} Gram\n"+
-                    "Cost: Rp.${formatDecimal(arrayCost[x])}\n"
+                    "Cost: ${formatDecimal(arrayCost[x])}\n"
         }
         alertDialogBuilder.setTitle("Checkout Dialog")
         alertDialogBuilder.setMessage(textMessage)
@@ -494,6 +501,15 @@ class checkOutPage : Fragment() {
                     database.userDao().deleteKeranjang(x)
                 }
                 Toast.makeText(requireContext(), "Berhasil Checkout!!", Toast.LENGTH_SHORT).show()
+                val bundle1 = Bundle()
+                val mfHome = homeFragment()
+                bundle1.putInt("uidUser",idUser!!)
+                mfHome.arguments = bundle1
+                mFragmentManager.beginTransaction().apply {
+                    replace(R.id.frameContainer,mfHome,homeFragment::class.java.simpleName)
+                    addToBackStack(null)
+                    commit()
+                }
             }else{
                 Toast.makeText(requireContext(), "E-money tidak cukup, silahkan top up terlebih dahulu", Toast.LENGTH_SHORT).show()
             }
