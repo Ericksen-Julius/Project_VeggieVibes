@@ -3,6 +3,7 @@ package com.example.project
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
+import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.text.Editable
@@ -20,6 +21,7 @@ import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.FragmentManager
 import com.example.project.data.AppDatabase
+import com.example.project.data.entity.Keranjang
 import com.example.project.data.entity.User
 import java.text.DecimalFormat
 import java.text.NumberFormat
@@ -45,10 +47,15 @@ class detailAccount : Fragment() {
     private lateinit var noTelpon: TextView
     private lateinit var _asalKota: TextView
     private lateinit var _alamat: TextView
+    private lateinit var passConf: EditText
+    private lateinit var confirmation: EditText
     private lateinit var edit: Button
     private lateinit var topUp: Button
+    private lateinit var delete: Button
+    private lateinit var logout: Button
     private lateinit var database: AppDatabase
     private lateinit var mFragmentManager: FragmentManager
+    private lateinit var dialogView: View
 //    private lateinit var getIdUser : Int
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -79,18 +86,20 @@ class detailAccount : Fragment() {
         _alamat = view.findViewById(R.id.alamat)
         edit = view.findViewById(R.id.editAccount)
         topUp = view.findViewById(R.id.topUp)
+        delete = view.findViewById(R.id.btnDel)
+        logout = view.findViewById(R.id.logOut)
         database = activity?.let { AppDatabase.getInstance(it.applicationContext) }!!
         val data = database.userDao().loadAllByIds(getIdUser)
         val formattedPrice = data.eMoney?.let { formatDecimal(it) }
-        nama.text = "Full Name: " + data.fullName
-        emoney.text = "E-money: $formattedPrice"
-        email.text = "Email: " + data.email
-        noTelpon.text = "No telpon: " + data.phone
-        _asalKota.text = "Asal Kota: " + data.asalKota
-        _alamat.text = "Alamat: " + data.alamat
+        nama.text = data.fullName
+        emoney.text = "$formattedPrice"
+        email.text = data.email
+        noTelpon.text = data.phone
+        _asalKota.text = data.asalKota
+        _alamat.text = data.alamat
         mFragmentManager = parentFragmentManager
         topUp.setOnClickListener {
-            showEditTextAlertDialog(requireContext(),getIdUser,data.fullName,data.email,data.password,data.phone,data.asalKota,data.alamat,data.namaToko)
+            showEditTextAlertDialog(requireContext(),getIdUser,data.fullName,data.email,data.password,data.phone, data.asalKota,data.alamat, data.namaToko)
         }
         edit.setOnClickListener {
             val bundle1 = Bundle()
@@ -103,12 +112,67 @@ class detailAccount : Fragment() {
                 commit()
             }
         }
+
+        delete.setOnClickListener {
+            val inflater = LayoutInflater.from(context)
+            dialogView = inflater.inflate(R.layout.fragment_delete_account, null)
+            passConf = dialogView.findViewById(R.id.pass)
+            confirmation = dialogView.findViewById(R.id.conf)
+
+            val builder = AlertDialog.Builder(requireContext())
+                .setTitle("Delete Account")
+                .setView(dialogView)
+                .setPositiveButton("Delete") { dialog, _ ->
+                    if (!(passConf.text.toString().equals(data.password))) {
+                        Toast.makeText(requireContext(), "Password Incorrect", Toast.LENGTH_SHORT).show()
+                        dialog.dismiss()
+                    }
+
+                    else if (!(confirmation.text.toString().equals("CONFIRM"))) {
+                        Toast.makeText(requireContext(), "Type CONFIRM to Delete Account", Toast.LENGTH_SHORT).show()
+                        dialog.dismiss()
+                    }
+
+                    else {
+                        database.userDao().delete(data)
+                        dialog.dismiss()
+                        val intent = Intent(requireContext(), MainActivity::class.java)
+                        requireActivity().finish()
+                        startActivity(intent)
+                    }
+                }
+                .setNegativeButton("Cancel") { dialog, _ ->
+                    dialog.dismiss()
+                }
+            val alertDialog = builder.create()
+            alertDialog.show()
+        }
+
+        logout.setOnClickListener {
+            val builder = AlertDialog.Builder(requireContext())
+                .setTitle("Log Out")
+                .setMessage("Are you sure you want to Log Out?")
+                .setPositiveButton("Yes") { dialog, _ ->
+                    Toast.makeText(requireContext(), "Success", Toast.LENGTH_SHORT).show()
+                    dialog.dismiss()
+                    val intent = Intent(requireContext(), MainActivity::class.java)
+                    requireActivity().finish()
+                    startActivity(intent)
+                }
+                .setNegativeButton("Cancel") { dialog, _ ->
+                    dialog.dismiss()
+                }
+            val alertDialog = builder.create()
+            alertDialog.show()
+        }
     }
+
+
     fun formatDecimal(number: Int): String {
         val decimalFormat = DecimalFormat("#,##0")
         return decimalFormat.format(number)
     }
-    private fun showEditTextAlertDialog(context: Context, idUser:Int?,nama:String?,email:String?,pass:String?,noTelpon:String?,asalKota:String?,alamat:String?,namaToko:String?) {
+    private fun showEditTextAlertDialog(context: Context, idUser:Int?,nama:String?,email:String?,pass:String?,noTelpon:String?, asalKota:String?,alamat:String?,namaToko:String?) {
         val dialogView = layoutInflater.inflate(R.layout.seekbar_custom, null)
         val seekBar = dialogView.findViewById<SeekBar>(R.id.seekBar)
         seekBar.min = 10_000
@@ -171,7 +235,7 @@ class detailAccount : Fragment() {
 //            val enteredText = editText.text.toString()
             val progress = seekBar.progress
             // Do something with the entered text
-            val dataUser = database.userDao().loadAllByIds(idUser)
+            var dataUser = database.userDao().loadAllByIds(idUser)
             database.userDao().updateUser(
                 User(
                     idUser,
@@ -182,9 +246,11 @@ class detailAccount : Fragment() {
                     asalKota,
                     alamat,
                     namaToko,
-                    dataUser.eMoney!!+progress
+                    dataUser.eMoney!! + progress
                 )
             )
+            dataUser = database.userDao().loadAllByIds(idUser)
+            Toast.makeText(requireContext(),"Berhasil Top Up!!",Toast.LENGTH_SHORT).show()
             this.emoney.text = "E-money: ${dataUser.eMoney?.let { formatDecimal(it) }}"
         }
 

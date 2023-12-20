@@ -200,14 +200,10 @@ class addEditSayauranFragment : Fragment() {
     }
     fun isFileInAssets(context: Context, fileName: String): Boolean {
         return try {
-            // Attempt to open the file
             val inputStream = context.assets.open(fileName)
-
-            // If the file exists, close the InputStream and return true
             inputStream.close()
             true
         } catch (e: IOException) {
-            // File not found or an IOException occurred
             false
         }
     }

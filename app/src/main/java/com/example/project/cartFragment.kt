@@ -88,15 +88,27 @@ class cartFragment : Fragment() {
             }
         })
         buttonNext.setOnClickListener {
-            val bundle = Bundle()
-            bundle.putInt("uidUser",getIdUser)
-            val mfRak = checkOutPage()
-            mfRak.arguments = bundle
-            mFragmentManager.beginTransaction().apply {
-                replace(R.id.frameContainer,mfRak,checkOutPage::class.java.simpleName)
-                addToBackStack(null)
-                commit()
+            if (database.userDao().loadKeranjangById(getIdUser).isEmpty()){
+                val builder = AlertDialog.Builder(requireContext())
+                    .setTitle("Error")
+                    .setMessage("Keranjang anda kosong!!")
+                    .setPositiveButton("OK") { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                val alertDialog = builder.create()
+                alertDialog.show()
+            }else{
+                val bundle = Bundle()
+                bundle.putInt("uidUser",getIdUser)
+                val mfRak = checkOutPage()
+                mfRak.arguments = bundle
+                mFragmentManager.beginTransaction().apply {
+                    replace(R.id.frameContainer,mfRak,checkOutPage::class.java.simpleName)
+                    addToBackStack(null)
+                    commit()
+                }
             }
+
         }
     }
     @SuppressLint("NotifyDataSetChanged")

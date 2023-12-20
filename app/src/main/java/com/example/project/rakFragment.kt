@@ -67,15 +67,51 @@ class rakFragment : Fragment() {
         addButton = view.findViewById(R.id.floatingActionButton)
         val getIdUser = arguments?.getInt("uidUser")
         addButton.setOnClickListener {
-            val mFragmentManager: FragmentManager = parentFragmentManager
-            val bundle = Bundle()
-            bundle.putInt("uidUser",getIdUser ?: 0)
-            val mfAdd = addEditSayauranFragment()
-            mfAdd.arguments = bundle
-            mFragmentManager.beginTransaction().apply {
-                replace(R.id.frameContainer,mfAdd,addEditSayauranFragment::class.java.simpleName)
-                addToBackStack(null)
-                commit()
+            if(database.userDao().loadAllByIds(getIdUser).namaToko == null){
+                val editText = EditText(context)
+                editText.hint = "Enter store name..."
+                val dialog = AlertDialog.Builder(context)
+                    .setTitle("Store Name")
+                    .setView(editText)
+                    .setPositiveButton("Save") { _, _ ->
+                        // Handle user input from the EditText
+                        val enteredText = editText.text.toString()
+                        if (enteredText.isNotEmpty()){
+                            database.userDao().updateToko(
+                                enteredText,
+                                getIdUser!!
+                            )
+                            val mFragmentManager: FragmentManager = parentFragmentManager
+                            val bundle = Bundle()
+                            bundle.putInt("uidUser",getIdUser ?: 0)
+                            val mfAdd = addEditSayauranFragment()
+                            mfAdd.arguments = bundle
+                            mFragmentManager.beginTransaction().apply {
+                                replace(R.id.frameContainer,mfAdd,addEditSayauranFragment::class.java.simpleName)
+                                addToBackStack(null)
+                                commit()
+                            }
+                        }else{
+                            Toast.makeText(context,"Inputan tidak boleh kosong",Toast.LENGTH_SHORT).show()
+                        }
+
+                    }
+                    .setNegativeButton("Cancel") { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                    .create()
+                dialog.show()
+            }else{
+                val mFragmentManager: FragmentManager = parentFragmentManager
+                val bundle = Bundle()
+                bundle.putInt("uidUser",getIdUser ?: 0)
+                val mfAdd = addEditSayauranFragment()
+                mfAdd.arguments = bundle
+                mFragmentManager.beginTransaction().apply {
+                    replace(R.id.frameContainer,mfAdd,addEditSayauranFragment::class.java.simpleName)
+                    addToBackStack(null)
+                    commit()
+                }
             }
         }
         mFragmentManager = parentFragmentManager

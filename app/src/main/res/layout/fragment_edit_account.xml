@@ -31,9 +31,8 @@
 
             android:id="@+id/email"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:background="@drawable/rounded_edit_text_white"
-            android:hint="  Email"
+            android:layout_height="wrap_content"
+            android:hint="Email"
             android:inputType="textEmailAddress"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -57,8 +56,7 @@
             android:id="@+id/password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="  Password"
-            android:background="@drawable/rounded_edit_text_white"
+            android:hint="Password"
             android:inputType="textPassword" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -77,9 +75,8 @@
 
             android:id="@+id/fullname"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:background="@drawable/rounded_edit_text_white"
-            android:hint="  Full Name"
+            android:layout_height="wrap_content"
+            android:hint="Full Name"
             android:inputType="text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -101,57 +98,88 @@
 
             android:id="@+id/noTelp"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:hint="  Nomor Telpon"
+            android:layout_height="wrap_content"
+            android:hint="Nomor Telpon"
             android:inputType="number"
-            android:background="@drawable/rounded_edit_text_white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayout5"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/black"
         android:layout_marginStart="16dp"
         android:layout_marginTop="28dp"
-        android:layout_marginEnd="16dp"
+        android:textSize="16sp"
+        android:text="Province:"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout4" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:layout_marginEnd="175dp"
+        android:text="City:"
+        android:textColor="@color/black"
+
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout4" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="24dp"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayout4">
+        app:layout_constraintTop_toBottomOf="@+id/textView5">
 
-        <EditText
-
-            android:id="@+id/asalKota"
+        <androidx.appcompat.widget.AppCompatSpinner
+            android:id="@+id/province"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:hint="  Asal Kota"
-            android:inputType="text"
-            android:background="@drawable/rounded_edit_text_white"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="4dp"
+            android:layout_weight="1"
+            android:backgroundTint="@color/black"
+            android:padding="4dp" />
+
+        <androidx.appcompat.widget.AppCompatSpinner
+            android:id="@+id/city"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="4dp"
+            android:layout_weight="1"
+            android:backgroundTint="@color/black"
+            android:padding="4dp" />
+    </LinearLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout6"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="18dp"
         android:layout_marginEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayout5">
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
 
         <EditText
 
             android:id="@+id/alamat"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:hint="  Alamat"
-            android:background="@drawable/rounded_edit_text_white"
+            android:layout_height="wrap_content"
+            android:hint="Alamat"
             android:inputType="text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -165,9 +193,10 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
         android:backgroundTint="@color/mint_green"
         android:text="Save"
-        android:background="@drawable/rounded_button"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textInputLayout6" />

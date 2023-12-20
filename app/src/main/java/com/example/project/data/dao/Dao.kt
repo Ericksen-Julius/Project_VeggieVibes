@@ -9,6 +9,7 @@ import com.example.project.data.entity.Keranjang
 import com.example.project.data.entity.Order
 import com.example.project.data.entity.Sayur
 import com.example.project.data.entity.User
+import java.util.Date
 
 @Dao
 interface UserDao {
@@ -45,6 +46,9 @@ interface UserDao {
     @Query("UPDATE user SET eMoney=:eMoney WHERE uid = :id")
     fun updateEmoney(eMoney: Int, id: Int)
 
+    @Query("UPDATE user SET namaToko=:namaToko WHERE uid = :id")
+    fun updateToko(namaToko: String, id: Int)
+
     @Query("SELECT * FROM sayur WHERE pemilik IN (:pemilik)")
     fun loadSayurByIdPemilik(pemilik: Int?): List<Sayur>
 
@@ -80,6 +84,12 @@ interface UserDao {
 
     @Query("SELECT * FROM `order` WHERE uid_user IN (:pemilik)")
     fun loadOrder(pemilik: Int?): Order
+
+    @Query("SELECT * FROM `order` WHERE uid_user IN (:pemilik) AND status = :status")
+    fun loadListOrder(pemilik: Int?,status:String): List<Order>
+
+    @Query("UPDATE `order` SET status = :status AND waktuSampai = :waktusampai WHERE uidorder = :uid")
+    fun updateStatus(status:String,waktusampai: Date, uid:Int?)
 
     @Insert
     fun insertAllOrder(vararg order: Order)
