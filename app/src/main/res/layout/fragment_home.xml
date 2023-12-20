@@ -27,7 +27,7 @@
         android:layout_height="49dp"
         android:layout_marginStart="24dp"
         android:layout_marginTop="88dp"
-        android:text="lorem ipsum dolor sit aemkansdjgnaspga"
+        android:text="What do you want for \nfood today?"
         android:textColor="@color/black"
         android:textSize="15sp"
         app:layout_constraintStart_toStartOf="parent"

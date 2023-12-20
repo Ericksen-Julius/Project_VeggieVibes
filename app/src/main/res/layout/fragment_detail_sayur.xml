@@ -12,22 +12,22 @@
         android:layout_width="402dp"
         android:layout_height="314dp"
         android:layout_gravity="center"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.555"
+        app:layout_constraintHorizontal_bias="0.444"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/sayurNama"
-        android:layout_width="239dp"
-        android:layout_height="32dp"
+        android:layout_width="232dp"
+        android:layout_height="23dp"
         android:layout_gravity="center"
         android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
-        android:text="Nama"
         android:fontFamily="serif"
-        android:textSize="24sp"
+        android:text="Nama"
+        android:textSize="15sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sayurHarga" />
 
@@ -46,14 +46,14 @@
 
     <TextView
         android:id="@+id/sayurBerat"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="56dp"
+        android:layout_height="24dp"
         android:layout_gravity="center"
         android:layout_marginStart="24dp"
         android:layout_marginTop="20dp"
-        android:text="Berat"
         android:fontFamily="serif"
-        android:textSize="24sp"
+        android:text="Berat"
+        android:textSize="15sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sayurStok" />
 
@@ -65,21 +65,21 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="20dp"
         android:text="Stok"
-        android:textSize="24sp"
+        android:textSize="15sp"
         android:fontFamily="serif"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sayurNama" />
 
     <TextView
         android:id="@+id/sayurSold"
-        android:layout_width="89dp"
-        android:layout_height="34dp"
+        android:layout_width="41dp"
+        android:layout_height="22dp"
         android:layout_gravity="center"
-        android:layout_marginStart="24dp"
+        android:layout_marginStart="12dp"
         android:layout_marginTop="20dp"
-        android:text="Sold"
         android:fontFamily="serif"
-        android:textSize="24sp"
+        android:text="Sold"
+        android:textSize="15sp"
         app:layout_constraintStart_toEndOf="@+id/sayurStok"
         app:layout_constraintTop_toBottomOf="@+id/sayurNama" />
 
