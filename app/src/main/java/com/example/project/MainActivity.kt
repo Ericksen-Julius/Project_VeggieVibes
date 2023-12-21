@@ -30,6 +30,7 @@ class MainActivity : AppCompatActivity() {
             val user = database.userDao().login(email.text.toString(),password.text.toString())
 //            user.fullName?.let { it1 -> Log.d("check", it1) }
             if (user!=null){
+                Toast.makeText(applicationContext, "Berhasil Log In", Toast.LENGTH_SHORT).show()
                 val intent = Intent(this,Home::class.java)
                 intent.putExtra("idUser",user.uid)
                 startActivity(intent)

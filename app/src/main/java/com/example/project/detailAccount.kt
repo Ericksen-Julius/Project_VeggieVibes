@@ -250,7 +250,7 @@ class detailAccount : Fragment() {
                 )
             )
             dataUser = database.userDao().loadAllByIds(idUser)
-            this.emoney.text = "E-money: ${dataUser.eMoney?.let { formatDecimal(it) }}"
+            this.emoney.text = "${dataUser.eMoney?.let { formatDecimal(it) }}"
         }
 
         alertDialogBuilder.setNegativeButton("Cancel") { dialog: DialogInterface, which: Int ->
