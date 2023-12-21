@@ -214,16 +214,20 @@ class addEditSayauranFragment : Fragment() {
         }
         saveBtn.setOnClickListener {
             if(namaSayur.text.isNotEmpty() && hargaSayur.text.isNotEmpty() && beratSayur.text.isNotEmpty() && stokSayur.text.isNotEmpty()){
+                val harga = hargaSayur.text.toString().replace(",", "")
+                val berat = beratSayur.text.toString().replace(",", "")
+                val jumlah = stokSayur.text.toString().replace(",", "")
                 if(getIdSayur != -1){
+                    val soldSayur = database.userDao().loadAllByIdsSayur(getIdSayur!!).sold
                     database.userDao().updateSayur(
                         Sayur(
                             getIdSayur,
                             namaSayur.text.toString(),
                             getIdUser,
-                            beratSayur.text.toString().toInt(),
-                            hargaSayur.text.toString().toInt(),
-                            0,
-                            stokSayur.text.toString().toInt(),
+                            berat.toInt(),
+                            harga.toInt(),
+                            soldSayur,
+                            jumlah.toInt(),
                             uploadText.text.toString()
                         )
                     )
@@ -233,10 +237,10 @@ class addEditSayauranFragment : Fragment() {
                             null,
                             namaSayur.text.toString(),
                             getIdUser,
-                            beratSayur.text.toString().toInt(),
-                            hargaSayur.text.toString().toInt(),
+                            berat.toInt(),
+                            harga.toInt(),
                             0,
-                            stokSayur.text.toString().toInt(),
+                            jumlah.toInt(),
                             uploadText.text.toString()
                         )
                     )
