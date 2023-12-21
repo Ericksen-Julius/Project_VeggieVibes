@@ -7,6 +7,7 @@ import androidx.room.Query
 import androidx.room.Update
 import com.example.project.data.entity.Keranjang
 import com.example.project.data.entity.Order
+import com.example.project.data.entity.Penjualan
 import com.example.project.data.entity.Sayur
 import com.example.project.data.entity.User
 import java.util.Date
@@ -64,6 +65,9 @@ interface UserDao {
     @Update
     fun updateSayur(sayur : Sayur)
 
+    @Query("SELECT * FROM sayur ORDER BY sold DESC LIMIT 3")
+    fun getTop3SoldSayurByPemilik(): List<Sayur>?
+
     @Query("SELECT * FROM keranjang WHERE user_id IN (:pemilik)")
     fun loadKeranjangById(pemilik: Int?): List<Keranjang>
 
@@ -81,17 +85,35 @@ interface UserDao {
     @Delete
     fun deleteKeranjang(keranjang: Keranjang)
 
-
     @Query("SELECT * FROM `order` WHERE uid_user IN (:pemilik)")
     fun loadOrder(pemilik: Int?): Order
+    @Query("SELECT * FROM `order` WHERE uidorder IN (:idorder)")
+    fun loadOrderByIdOrder(idorder: Int?): Order
+
 
     @Query("SELECT * FROM `order` WHERE uid_user IN (:pemilik) AND status = :status")
     fun loadListOrder(pemilik: Int?,status:String): List<Order>
 
+
     @Query("UPDATE `order` SET status = :status AND waktuSampai = :waktusampai WHERE uidorder = :uid")
     fun updateStatus(status:String,waktusampai: Date, uid:Int?)
 
+    @Update
+    fun updateStatusOrder(order: Order)
+
     @Insert
     fun insertAllOrder(vararg order: Order)
+
+    @Delete
+    fun deleteHistory(order: Order)
+
+    @Query("SELECT user_id,sayur_id,sum(count) as count FROM Penjualan WHERE sayur_id = :uid_sayur GROUP BY user_id,sayur_id")
+    fun getPenjualan(uid_sayur : Int?) : List<Penjualan>
+
+
+    @Insert
+    fun insertPenjualan(vararg penjualan: Penjualan)
+
+
 
 }

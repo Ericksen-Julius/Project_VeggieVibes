@@ -14,7 +14,8 @@ data class Order (
     @ColumnInfo(name = "status") var status : String?,
     @ColumnInfo(name = "totalHarga") var totalHarga : Int?,
     @ColumnInfo(name = "waktuBeli") var waktuDatang : Date?,
-    @ColumnInfo(name = "waktuSampai") var waktuSampai : Date?
+    @ColumnInfo(name = "waktuSampai") var waktuSampai : Date?,
+    @ColumnInfo(name = "alamat") var alamat : String?
 )
 
 //object DateConverter {

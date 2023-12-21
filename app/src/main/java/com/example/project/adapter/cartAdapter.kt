@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.project.R
 import com.example.project.data.AppDatabase
@@ -77,7 +78,7 @@ data class cartAdapter (
             )
         }
         holder.decrement.setOnClickListener {
-            if (holder.textCount.text.toString().toInt() > 0){
+            if (holder.textCount.text.toString().toInt() > 1){
                 holder.textCount.text = (holder.textCount.text.toString().toInt()-1).toString()
                 database.userDao().updateKeranjang(
                     Keranjang(
@@ -87,13 +88,14 @@ data class cartAdapter (
                         holder.textCount.text.toString().toInt()
                     )
                 )
+            }else{
+                Toast.makeText(context,"Minimal pembelian 1 item!!",Toast.LENGTH_SHORT).show()
             }
         }
         holder.deleteCart.setOnClickListener {
             this.onItemClickCallBack.deleteCart(position)
         }
         holder.textCount.text = keranjang.count.toString()
-
     }
 
     private fun decodeImage(context: Context, filename: String): Bitmap? {

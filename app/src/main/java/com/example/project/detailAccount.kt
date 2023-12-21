@@ -172,7 +172,7 @@ class detailAccount : Fragment() {
         val decimalFormat = DecimalFormat("#,##0")
         return decimalFormat.format(number)
     }
-    private fun showEditTextAlertDialog(context: Context, idUser:Int?,nama:String?,email:String?,pass:String?,noTelpon:String?, asalKota:String?,alamat:String?,namaToko:String?) {
+    private fun showEditTextAlertDialog(context: Context, idUser:Int?,nama:String?,email:String?,pass:String?,noTelpon:String?,asalKota:String?,alamat:String?,namaToko:String?) {
         val dialogView = layoutInflater.inflate(R.layout.seekbar_custom, null)
         val seekBar = dialogView.findViewById<SeekBar>(R.id.seekBar)
         seekBar.min = 10_000
@@ -250,8 +250,7 @@ class detailAccount : Fragment() {
                 )
             )
             dataUser = database.userDao().loadAllByIds(idUser)
-            Toast.makeText(requireContext(),"Berhasil Top Up!!",Toast.LENGTH_SHORT).show()
-            this.emoney.text = "E-money: ${dataUser.eMoney?.let { formatDecimal(it) }}"
+            this.emoney.text = "Rp. ${dataUser.eMoney?.let { formatDecimal(it) }}"
         }
 
         alertDialogBuilder.setNegativeButton("Cancel") { dialog: DialogInterface, which: Int ->

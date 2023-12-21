@@ -46,7 +46,7 @@
 
     <TextView
         android:id="@+id/sayurBerat"
-        android:layout_width="56dp"
+        android:layout_width="0dp"
         android:layout_height="24dp"
         android:layout_gravity="center"
         android:layout_marginStart="24dp"
@@ -54,6 +54,7 @@
         android:fontFamily="serif"
         android:text="Berat"
         android:textSize="15sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sayurStok" />
 
@@ -72,14 +73,16 @@
 
     <TextView
         android:id="@+id/sayurSold"
-        android:layout_width="41dp"
+        android:layout_width="0dp"
         android:layout_height="22dp"
         android:layout_gravity="center"
-        android:layout_marginStart="12dp"
+        android:layout_marginStart="70dp"
         android:layout_marginTop="20dp"
         android:fontFamily="serif"
         android:text="Sold"
         android:textSize="15sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/sayurStok"
         app:layout_constraintTop_toBottomOf="@+id/sayurNama" />
 

@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.Spinner
 import android.widget.TextView
@@ -22,6 +23,7 @@ import androidx.fragment.app.FragmentManager
 import com.example.project.data.AppDatabase
 import com.example.project.data.entity.Keranjang
 import com.example.project.data.entity.Order
+import com.example.project.data.entity.Penjualan
 import com.example.project.data.entity.Sayur
 import com.example.project.data.entity.User
 import com.example.project.model.city.DcCity
@@ -150,7 +152,7 @@ class checkOutPage : Fragment() {
 
     }
 
-    fun getCost(origin : String,destination: String, weight:Int, kurir: String){
+    fun getCost(origin: String, destination: String, weight: Int, kurir: String){
         showLoading()
         var callApi = ApiCost.apiService.getCost(costModel( origin,destination,weight,kurir))
         callApi.enqueue(object : Callback<DcCost> {
@@ -163,13 +165,24 @@ class checkOutPage : Fragment() {
                     for (x in hasil_cost!!.rajaongkir!!.results?.get(0)!!.costs!!){
                         if (x != null) {
                             x.cost!![0]!!.value?.let { costArray.add(it) }
-                        }
-                        if (origin == cityAsalId[cityAsalId.size-1]){
-                            _cost.text = "Rp.${formatDecimal(costArray.sum())}"
-                            _harga.text = "Rp.${formatDecimal(subTotal + costArray.sum())}"
-                            unshowLoading()
+                            if (costArray.size == cityAsalId.size){
+                                Log.d("origin",origin)
+                                Log.d("x.cost", x.cost!![0]!!.value.toString())
+                                Log.d("city asal id",cityAsalId.toString())
+                                _cost.text = "Rp.${formatDecimal(costArray.sum())}"
+                                Log.d("cek ongkir cost",costArray.sum().toString())
+                                _harga.text = "Rp.${formatDecimal(subTotal + costArray.sum())}"
+                                unshowLoading()
+//                                return
+                            }
                             return
                         }
+//                        if (origin == cityAsalId[cityAsalId.size-1]){
+//                            _cost.text = "Rp.${formatDecimal(costArray.sum())}"
+//                            _harga.text = "Rp.${formatDecimal(subTotal + costArray.sum())}"
+//                            unshowLoading()
+//                            return
+//                        }
                     }
                 }
             }
@@ -291,6 +304,8 @@ class checkOutPage : Fragment() {
         val getIdUser = arguments?.getInt("uidUser")
         database = activity?.let { AppDatabase.getInstance(it.applicationContext) }!!
         val dataKeranjang = database.userDao().loadKeranjangById(getIdUser)
+        var alamat : EditText = view.findViewById(R.id.alamat)
+        alamat.setText(database.userDao().loadAllByIds(getIdUser).alamat)
         var kotaAsal = ArrayList<String>()
         var totalWeight = ArrayList<Int>()
         var totalPrice = ArrayList<Int>()
@@ -303,6 +318,7 @@ class checkOutPage : Fragment() {
             val dataPemilik = database.userDao().loadAllByIds(dataSayur.pemilik)
             sayurIdKeranjang.add(x.sayur_id!!)
             totalSold.add(x.count!!)
+            Log.d("total sold",totalSold.toString())
             if (!kotaAsal.contains(dataPemilik.asalKota)){
                 dataPemilik.asalKota?.let { kotaAsal.add(it) }
                 totalWeight.add(x.count?.let { dataSayur.berat?.times(it) } ?: 0)
@@ -385,6 +401,7 @@ class checkOutPage : Fragment() {
             }
 
         }
+        var loadAwal = true
         spinnerKota.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parentView: AdapterView<*>?,
@@ -403,13 +420,14 @@ class checkOutPage : Fragment() {
                     Log.d("chekk4", _kurir.text.toString())
                     getCost(cityAsalId[x],idChoosen,totalWeight[x],_kurir.text.toString().toLowerCase())
                 }
-
+                loadAwal = false
             }
 
             override fun onNothingSelected(parentView: AdapterView<*>?) {
 
             }
         }
+
         spinnerKurir.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parentView: AdapterView<*>?,
@@ -419,13 +437,22 @@ class checkOutPage : Fragment() {
             ) {
                 _kurir.text = kurir[position]
                 courier = kurir[position]
+                if(!loadAwal){
+                    costArray.clear()
+
+                    for(x in kotaAsal.indices){
+                        getCost(cityAsalId[x],idChoosen,totalWeight[x],_kurir.text.toString().toLowerCase())
+                    }
+                }
+
+
             }
             override fun onNothingSelected(parentView: AdapterView<*>?) {
 
             }
         }
         buttonCheckOut.setOnClickListener {
-            checkOnClick(getIdUser,kotaAsal,totalPrice,totalWeight,costArray,dataKeranjang,sayurIdKeranjang,totalSold)
+            checkOnClick(getIdUser,kotaAsal,totalPrice,totalWeight,costArray,dataKeranjang,sayurIdKeranjang,totalSold,alamat.text.toString())
         }
     }
 
@@ -437,8 +464,10 @@ class checkOutPage : Fragment() {
         arrayCost: ArrayList<Int>,
         dataKeranjang: List<Keranjang>,
         idSayur: ArrayList<Int>,
-        totalSold: ArrayList<Int>
+        totalSold: ArrayList<Int>,
+        alamat : String
     ){
+        Log.d("cek ongkir",arrayCost.sum().toString())
         val alertDialogBuilder = AlertDialog.Builder(context)
         var textMessage = ""
         for (x in array1.indices){
@@ -462,7 +491,8 @@ class checkOutPage : Fragment() {
                         "Shipping",
                         array2.sum() + arrayCost.sum(),
                         currentDate,
-                        null
+                        null,
+                        alamat
                     )
                 )
                 for (x in idSayur.indices){
@@ -497,6 +527,16 @@ class checkOutPage : Fragment() {
                     )
                 )
                 val idKeranjang = database.userDao().loadKeranjangById(idUser)
+                for(x in idKeranjang){
+                    database.userDao().insertPenjualan(
+                        Penjualan(
+                            null,
+                            x.sayur_id,
+                            x.user_id,
+                            x.count
+                        )
+                    )
+                }
                 for (x in idKeranjang){
                     database.userDao().deleteKeranjang(x)
                 }
@@ -505,6 +545,7 @@ class checkOutPage : Fragment() {
                 val mfHome = homeFragment()
                 bundle1.putInt("uidUser",idUser!!)
                 mfHome.arguments = bundle1
+                mFragmentManager = parentFragmentManager
                 mFragmentManager.beginTransaction().apply {
                     replace(R.id.frameContainer,mfHome,homeFragment::class.java.simpleName)
                     addToBackStack(null)

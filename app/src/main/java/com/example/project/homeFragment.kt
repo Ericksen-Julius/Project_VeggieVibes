@@ -7,7 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.viewpager2.widget.ViewPager2
+import com.example.project.adapter.carouselAdapter
 import com.example.project.data.AppDatabase
+import com.example.project.data.entity.Keranjang
+import com.example.project.data.entity.Sayur
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -25,6 +31,13 @@ class homeFragment : Fragment() {
     private var param2: String? = null
     private lateinit var database: AppDatabase
     private lateinit var nameTag : TextView
+    private lateinit var carousel: ViewPager2
+    private lateinit var adapterCarousel: carouselAdapter
+    private lateinit var dialogView: View
+    private lateinit var decrementButton: Button
+    private lateinit var incrementButton: Button
+    private lateinit var textView: TextView
+    private var listSayur : MutableList<Sayur> = mutableListOf<Sayur>()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,10 +61,14 @@ class homeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         (super.requireActivity() as Home).setTitle("VeggieVibes")
         var getIdUser = arguments?.getInt("uidUser")
+        carousel = view.findViewById(R.id.carousel)
+        adapterCarousel = carouselAdapter(listSayur)
         database = activity?.let { AppDatabase.getInstance(it.applicationContext) }!!
+        carousel.adapter = adapterCarousel
+        getData()
         nameTag = view.findViewById(R.id.nameUser)
         val user = database.userDao().loadAllByIds(getIdUser)
-        val text = "Welcome Back, ${user.fullName}"
+        val text = "Welcome Back\n${user.fullName}"
         val buyProducts = view.findViewById<Button>(R.id.btnBuyProducts)
         nameTag.text = text
         buyProducts.setOnClickListener {
@@ -62,8 +79,20 @@ class homeFragment : Fragment() {
                 addToBackStack(null)
                 commit()
             }
-
         }
+    }
+    fun getData(){
+        listSayur.clear()
+        database.userDao().getTop3SoldSayurByPemilik()?.let { listSayur.addAll(it) }
+        adapterCarousel.notifyDataSetChanged()
+    }
+
+    fun incrementCount() {
+        textView.text = (textView.text.toString().toInt() + 1).toString()
+    }
+
+    fun decrementCount() {
+        textView.text = (textView.text.toString().toInt() - 1).toString()
     }
 
     companion object {

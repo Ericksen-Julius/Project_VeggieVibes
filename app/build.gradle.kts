@@ -58,8 +58,10 @@ dependencies {
     implementation ("io.ktor:ktor-client-serialization:1.6.5")
     implementation ("io.ktor:ktor-client-logging:1.6.5")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.1")
+    //Carousel
+    implementation("androidx.viewpager2:viewpager2:1.0.0")
 
-    implementation ("androidx.room:room-runtime:2.6.0")
+    implementation("androidx.room:room-runtime:2.6.0")
     kapt("androidx.room:room-compiler:2.6.0")
 
     //retrofit

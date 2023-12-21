@@ -21,7 +21,7 @@ import java.util.Locale
 
 
 data class searchAdapter(
-    private val listSayur: List<Sayur>
+    private var listSayur: List<Sayur>
 ) : RecyclerView.Adapter<searchAdapter.ListViewHolder>(){
     private var filteredList: List<Sayur> = listSayur
     private lateinit var context: Context // Added context property
@@ -92,12 +92,46 @@ data class searchAdapter(
         return decimalFormat.format(number)
     }
     fun filter(query: String) {
-        filteredList = if (query.isBlank()) {
-            listSayur
+//        filteredList = if (query.isBlank()) {
+//            listSayur
+//        } else {
+//            var listSayur2 : MutableList<Sayur> = mutableListOf()
+//            val carisayur = database.userDao().getAllSayur()
+//            for (x in carisayur.indices){
+//                val id_user = carisayur[x].pemilik
+//                val caripemilik = database.userDao().loadAllByIds(id_user)
+//                val namatoko = caripemilik.namaToko
+//                if (namatoko != null) {
+//                    if(namatoko.contains(query.lowercase(Locale.getDefault()))){
+//                        listSayur2.add(carisayur[x])
+//                    }else if(carisayur[x].nama?.contains(query.lowercase(Locale.getDefault())) == true){
+//                        listSayur2.add(carisayur[x])
+//                    }
+//                }
+//            }
+        if (query.isBlank()) {
+//            listSayur
+            filteredList = listSayur
         } else {
-            listSayur.filter {
-                it.nama?.lowercase(Locale.getDefault())?.contains(query.lowercase(Locale.getDefault()))!!
+            var listSayur2 : MutableList<Sayur> = mutableListOf()
+            val carisayur = database.userDao().getAllSayur()
+            for (x in carisayur.indices){
+                val id_user = carisayur[x].pemilik
+                val caripemilik = database.userDao().loadAllByIds(id_user)
+                val namatoko = caripemilik.namaToko
+                if (namatoko != null) {
+                    if(namatoko.contains(query.lowercase(Locale.getDefault()))){
+                        listSayur2.add(carisayur[x])
+                    }else if(carisayur[x].nama?.contains(query.lowercase(Locale.getDefault())) == true){
+                        listSayur2.add(carisayur[x])
+                    }
+                }
             }
+            filteredList = listSayur2
+
+//            listSayur.filter {
+//                it.nama?.lowercase(Locale.getDefault())?.contains(query.lowercase(Locale.getDefault()))!!
+//            }
         }
         notifyDataSetChanged()
     }

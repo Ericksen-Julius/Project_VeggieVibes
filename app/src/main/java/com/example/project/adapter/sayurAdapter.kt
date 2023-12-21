@@ -63,7 +63,7 @@ data class sayurAdapter(
         holder.buttonDialog.setOnClickListener {
             OnItemClickCallBack.onItemClick(position)
         }
-        holder._stok.text = sayur.stok.toString()
+        holder._stok.text = "Stok: ${sayur.stok.toString()}"
     }
     private fun decodeImage(context: Context, filename: String): Bitmap? {
         return try {

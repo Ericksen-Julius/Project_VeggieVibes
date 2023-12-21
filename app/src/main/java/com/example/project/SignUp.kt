@@ -13,6 +13,7 @@ import android.widget.EditText
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.get
 import com.example.project.data.AppDatabase
 import com.example.project.data.entity.User
@@ -174,6 +175,7 @@ class SignUp : AppCompatActivity() {
         toSignIn.setOnClickListener {
             val intent = Intent(this,MainActivity::class.java)
             startActivity(intent)
+            finish()
         }
         getDataProvince()
 
@@ -218,23 +220,32 @@ class SignUp : AppCompatActivity() {
                 if(check != null){
                     Toast.makeText(applicationContext,"Email sudah terdaftar",Toast.LENGTH_SHORT).show()
                 }else {
-                    database.userDao().insertAll(
-                        User(
-                            null,
-                            fullName.text.toString(),
-                            email.text.toString(),
-                            password.text.toString(),
-                            noTelpon.text.toString(),
-                            city,
-                            _alamat.text.toString(),
-                            null,
-                            0
-                        )
-                    )
-                    Toast.makeText(applicationContext,"Berhasil membuat akun!!",Toast.LENGTH_SHORT).show()
-                    finish()
+                    val builder = AlertDialog.Builder(this)
+                        .setTitle("Sign Up")
+                        .setMessage("Apakah data anda sudah benar?")
+                        .setPositiveButton("Yes") { dialog, _ ->
+                            database.userDao().insertAll(
+                                User(
+                                    null,
+                                    fullName.text.toString(),
+                                    email.text.toString(),
+                                    password.text.toString(),
+                                    noTelpon.text.toString(),
+                                    city,
+                                    _alamat.text.toString(),
+                                    null,
+                                    0
+                                )
+                            )
+                            Toast.makeText(applicationContext,"Berhasil membuat akun!!",Toast.LENGTH_SHORT).show()
+                            finish()
+                        }
+                        .setNegativeButton("Cancel") {dialog, _ ->
+                            dialog.dismiss()
+                        }
+                    val alertDialog = builder.create()
+                    alertDialog.show()
                 }
-
             }else{
                 Toast.makeText(applicationContext,"Silahkan isi data dengan valid!!",Toast.LENGTH_SHORT).show()
             }
