@@ -12,6 +12,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.example.project.data.AppDatabase
 import com.example.project.data.entity.User
@@ -236,20 +237,31 @@ class editAccount : Fragment() {
         }
 
         save.setOnClickListener {
-            database.userDao().updateUser(
-                User(
-                    getIdUser,
-                    nama.text.toString(),
-                    email.text.toString(),
-                    password.text.toString(),
-                    noTelpon.text.toString(),
-                    city,
-                    _alamat.text.toString(),
-                    dataUser.namaToko,
-                    dataUser.eMoney
-                )
-            )
-            requireActivity().supportFragmentManager.popBackStack()
+            val builder = AlertDialog.Builder(requireContext())
+                .setTitle("Edit Account")
+                .setMessage("Apakah data anda sudah benar?")
+                .setPositiveButton("Yes") { dialog, _ ->
+                    database.userDao().updateUser(
+                        User(
+                            getIdUser,
+                            nama.text.toString(),
+                            email.text.toString(),
+                            password.text.toString(),
+                            noTelpon.text.toString(),
+                            city,
+                            _alamat.text.toString(),
+                            dataUser.namaToko,
+                            dataUser.eMoney
+                        )
+                    )
+                    Toast.makeText(requireContext(),"Berhasil edit akun!!", Toast.LENGTH_SHORT).show()
+                    requireActivity().supportFragmentManager.popBackStack()
+                }
+                .setNegativeButton("Cancel") {dialog, _ ->
+                    dialog.dismiss()
+                }
+            val alertDialog = builder.create()
+            alertDialog.show()
         }
     }
 
