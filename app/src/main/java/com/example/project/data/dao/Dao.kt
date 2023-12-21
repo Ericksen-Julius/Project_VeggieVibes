@@ -73,6 +73,8 @@ interface UserDao {
 
     @Query("SELECT * FROM keranjang WHERE user_id IN (:pemilik) AND sayur_id IN (:sayur)")
     fun checkKeranjang(pemilik: Int?, sayur: Int?): Keranjang?
+    @Query("SELECT * FROM keranjang WHERE uidKeranjang IN (:id)")
+    fun checkKeranjang1(id: Int?): Keranjang?
 
     @Query("UPDATE keranjang SET COUNT=(:count) WHERE user_id IN (:pemilik) AND sayur_id IN (:sayur)")
     fun updateKeranjang(count:Int?,pemilik: Int?,sayur: Int)

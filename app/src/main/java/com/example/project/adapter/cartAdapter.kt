@@ -63,8 +63,8 @@ data class cartAdapter (
         }
         holder._namaToko.text = dataPenjual.namaToko
         holder.namaSayur.text = dataSayur.nama
-        val totalHarga = keranjang.count?.let { dataSayur.harga?.times(it) }
-        val formattedPrice = totalHarga?.let { formatDecimal(it) }
+        var totalHarga = keranjang.count?.let { dataSayur.harga?.times(it) }
+        var formattedPrice = totalHarga?.let { formatDecimal(it) }
         holder.hargaSayur.text = "Rp.${formattedPrice}"
         holder.increment.setOnClickListener {
             holder.textCount.text = (holder.textCount.text.toString().toInt()+1).toString()
@@ -76,6 +76,10 @@ data class cartAdapter (
                 holder.textCount.text.toString().toInt()
                 )
             )
+            val tmp_keranjang2 = database.userDao().checkKeranjang1(keranjang.uidKeranjang)
+            totalHarga = tmp_keranjang2?.count?.let { dataSayur.harga?.times(it) }
+            formattedPrice = totalHarga?.let { formatDecimal(it) }
+            holder.hargaSayur.text = "Rp.${formattedPrice}"
         }
         holder.decrement.setOnClickListener {
             if (holder.textCount.text.toString().toInt() > 1){
@@ -88,6 +92,10 @@ data class cartAdapter (
                         holder.textCount.text.toString().toInt()
                     )
                 )
+                val tmp_keranjang = database.userDao().checkKeranjang1(keranjang.uidKeranjang)
+                totalHarga = tmp_keranjang?.count?.let { dataSayur.harga?.times(it) }
+                formattedPrice = totalHarga?.let { formatDecimal(it) }
+                holder.hargaSayur.text = "Rp.${formattedPrice}"
             }else{
                 Toast.makeText(context,"Minimal pembelian 1 item!!",Toast.LENGTH_SHORT).show()
             }
