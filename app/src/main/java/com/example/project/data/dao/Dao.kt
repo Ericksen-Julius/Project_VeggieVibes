@@ -84,7 +84,6 @@ interface UserDao {
     @Delete
     fun deleteKeranjang(keranjang: Keranjang)
 
-
     @Query("SELECT * FROM `order` WHERE uid_user IN (:pemilik)")
     fun loadOrder(pemilik: Int?): Order
 
