@@ -23,6 +23,7 @@ import androidx.fragment.app.FragmentManager
 import com.example.project.data.AppDatabase
 import com.example.project.data.entity.Keranjang
 import com.example.project.data.entity.Order
+import com.example.project.data.entity.Penjualan
 import com.example.project.data.entity.Sayur
 import com.example.project.data.entity.User
 import com.example.project.model.city.DcCity
@@ -151,7 +152,7 @@ class checkOutPage : Fragment() {
 
     }
 
-    fun getCost(origin : String,destination: String, weight:Int, kurir: String){
+    fun getCost(origin: String, destination: String, weight: Int, kurir: String){
         showLoading()
         var callApi = ApiCost.apiService.getCost(costModel( origin,destination,weight,kurir))
         callApi.enqueue(object : Callback<DcCost> {
@@ -317,6 +318,7 @@ class checkOutPage : Fragment() {
             val dataPemilik = database.userDao().loadAllByIds(dataSayur.pemilik)
             sayurIdKeranjang.add(x.sayur_id!!)
             totalSold.add(x.count!!)
+            Log.d("total sold",totalSold.toString())
             if (!kotaAsal.contains(dataPemilik.asalKota)){
                 dataPemilik.asalKota?.let { kotaAsal.add(it) }
                 totalWeight.add(x.count?.let { dataSayur.berat?.times(it) } ?: 0)
@@ -425,6 +427,7 @@ class checkOutPage : Fragment() {
 
             }
         }
+
         spinnerKurir.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parentView: AdapterView<*>?,
@@ -436,15 +439,13 @@ class checkOutPage : Fragment() {
                 courier = kurir[position]
                 if(!loadAwal){
                     costArray.clear()
-//                showLoading()
-                    for (x in kotaAsal.indices){
-                        Log.d("chekk",cityAsalId[x])
-                        Log.d("chekk2", idChoosen)
-                        Log.d("chekk3", totalWeight[x].toString())
-                        Log.d("chekk4", _kurir.text.toString())
+
+                    for(x in kotaAsal.indices){
                         getCost(cityAsalId[x],idChoosen,totalWeight[x],_kurir.text.toString().toLowerCase())
                     }
                 }
+
+
             }
             override fun onNothingSelected(parentView: AdapterView<*>?) {
 
@@ -526,6 +527,16 @@ class checkOutPage : Fragment() {
                     )
                 )
                 val idKeranjang = database.userDao().loadKeranjangById(idUser)
+                for(x in idKeranjang){
+                    database.userDao().insertPenjualan(
+                        Penjualan(
+                            null,
+                            x.sayur_id,
+                            x.user_id,
+                            x.count
+                        )
+                    )
+                }
                 for (x in idKeranjang){
                     database.userDao().deleteKeranjang(x)
                 }

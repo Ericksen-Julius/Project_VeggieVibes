@@ -7,6 +7,7 @@ import androidx.room.Query
 import androidx.room.Update
 import com.example.project.data.entity.Keranjang
 import com.example.project.data.entity.Order
+import com.example.project.data.entity.Penjualan
 import com.example.project.data.entity.Sayur
 import com.example.project.data.entity.User
 import java.util.Date
@@ -105,6 +106,14 @@ interface UserDao {
 
     @Delete
     fun deleteHistory(order: Order)
+
+    @Query("SELECT user_id,sayur_id,sum(count) as count FROM Penjualan WHERE sayur_id = :uid_sayur GROUP BY user_id,sayur_id")
+    fun getPenjualan(uid_sayur : Int?) : List<Penjualan>
+
+
+    @Insert
+    fun insertPenjualan(vararg penjualan: Penjualan)
+
 
 
 }

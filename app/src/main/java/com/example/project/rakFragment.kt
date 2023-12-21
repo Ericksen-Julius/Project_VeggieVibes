@@ -168,7 +168,17 @@ class rakFragment : Fragment() {
                             addToBackStack(null)
                             commit()
                         }
-                    }else{
+                    }else if(which == 3){
+                        val bundle = Bundle()
+                        bundle.putInt("uid_sayur",listSayur[position].uidSayur?:0)
+                        val mfRak = historyPenjualan()
+                        mfRak.arguments = bundle
+                        mFragmentManager.beginTransaction().apply {
+                            replace(R.id.frameContainer,mfRak,historyPenjualan::class.java.simpleName)
+                            addToBackStack(null)
+                            commit()
+                        }
+                    } else{
                         dialog.dismiss()
                     }
                 })

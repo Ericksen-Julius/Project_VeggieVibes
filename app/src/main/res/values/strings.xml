@@ -6,6 +6,7 @@
         <item>Edit</item>
         <item>Delete</item>
         <item>Detail</item>
+        <item>History</item>
         <item>Cancel</item>
     </string-array>
 </resources>
