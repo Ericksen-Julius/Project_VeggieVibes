@@ -64,6 +64,9 @@ interface UserDao {
     @Update
     fun updateSayur(sayur : Sayur)
 
+    @Query("SELECT * FROM sayur WHERE pemilik NOT IN (:pemilik) ORDER BY sold DESC LIMIT 3")
+    fun getTop3SoldSayurByPemilik(pemilik: Int): List<Sayur>?
+
     @Query("SELECT * FROM keranjang WHERE user_id IN (:pemilik)")
     fun loadKeranjangById(pemilik: Int?): List<Keranjang>
 
