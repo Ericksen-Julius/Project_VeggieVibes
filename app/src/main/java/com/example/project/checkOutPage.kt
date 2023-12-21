@@ -505,6 +505,7 @@ class checkOutPage : Fragment() {
                 val mfHome = homeFragment()
                 bundle1.putInt("uidUser",idUser!!)
                 mfHome.arguments = bundle1
+                mFragmentManager = parentFragmentManager
                 mFragmentManager.beginTransaction().apply {
                     replace(R.id.frameContainer,mfHome,homeFragment::class.java.simpleName)
                     addToBackStack(null)

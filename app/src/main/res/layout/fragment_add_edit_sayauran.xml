@@ -59,59 +59,72 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp">
 
-            <EditText
-                android:id="@+id/hargaSayur"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/rounded_edit_text"
-                android:hint="Harga Sayuran"
-                android:inputType="number"
-                android:padding="12dp" />
+                android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/hargaSayur"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/rounded_edit_text"
+                    android:hint="Harga Sayuran"
+                    android:inputType="number"
+                    android:padding="12dp" />
+            </FrameLayout>
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp">
-
-            <EditText
-                android:id="@+id/beratSayur"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/rounded_edit_text"
-                android:hint="Berat Sayuran (Gram)"
-                android:inputType="number"
-                android:padding="12dp" />
+                android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/beratSayur"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/rounded_edit_text"
+                    android:hint="Berat Sayuran (Gram)"
+                    android:inputType="number"
+                    android:padding="12dp" />
+            </FrameLayout>
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp">
-
-            <EditText
-                android:id="@+id/stokSayur"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/rounded_edit_text"
-                android:hint="Stok Sayuran"
-                android:inputType="number"
-                android:padding="12dp" />
+                android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/stokSayur"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/rounded_edit_text"
+                    android:hint="Stok Sayuran"
+                    android:inputType="number"
+                    android:padding="12dp" />
+            </FrameLayout>
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp">
-
-            <EditText
-                android:id="@+id/fotoSayur"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/rounded_edit_text"
-                android:hint="Nama file foto"
-                android:inputType="text"
-                android:padding="12dp" />
+                android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/fotoSayur"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/rounded_edit_text"
+                    android:hint="Nama file foto"
+                    android:inputType="text"
+                    android:padding="12dp" />
+            </FrameLayout>
         </com.google.android.material.textfield.TextInputLayout>
 
         <ImageView

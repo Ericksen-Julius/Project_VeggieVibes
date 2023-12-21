@@ -109,7 +109,11 @@ class searchFragment : Fragment() {
                 incrementButton = dialogView.findViewById(R.id.incrementButton)
                 textView = dialogView.findViewById(R.id.counterTextView)
                 decrementButton.setOnClickListener {
-                    decrementCount()
+                    if(textView.text.toString().toInt() > 1){
+                        decrementCount()
+                    }else{
+                        Toast.makeText(requireContext(),"Minimal 1 pembelian!!", Toast.LENGTH_SHORT).show()
+                    }
                 }
 
                 incrementButton.setOnClickListener {

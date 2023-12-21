@@ -9,6 +9,8 @@ import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.provider.OpenableColumns
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.KeyEvent
 import androidx.fragment.app.Fragment
@@ -26,6 +28,8 @@ import com.example.project.data.entity.User
 import java.io.IOException
 import java.lang.Exception
 import java.lang.RuntimeException
+import java.text.NumberFormat
+import java.util.Locale
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -123,20 +127,81 @@ class addEditSayauranFragment : Fragment() {
             (super.requireActivity() as Home).setTitle("Add sayuran")
 
         }
+        hargaSayur.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val userInput = s.toString().replace(",", "")
+                hargaSayur.removeTextChangedListener(this)
+                val intValue = userInput.toLongOrNull() ?: 0
+                val clampedValue = when {
+                    intValue < 1 -> {
+                        Toast.makeText(requireContext(), "Harga sayuran tidak boleh 0 rupiah!", Toast.LENGTH_SHORT).show()
+                        1
+                    }
+                    else -> intValue
+                }
 
+                hargaSayur.setText(NumberFormat.getNumberInstance(Locale.US).format(clampedValue))
 
+                hargaSayur.setSelection(hargaSayur.text.length)
 
+                hargaSayur.addTextChangedListener(this)
+            }
+            override fun afterTextChanged(s: Editable?) {
+            }
+        })
+        beratSayur.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val userInput = s.toString().replace(",", "")
+                beratSayur.removeTextChangedListener(this)
+                val intValue = userInput.toLongOrNull() ?: 0
+                val clampedValue = when {
+                    intValue < 1 -> {
+                        Toast.makeText(requireContext(), "Berat sayuran harus lebih dari 1 gram!", Toast.LENGTH_SHORT).show()
+                        1
+                    }
+                    else -> intValue
+                }
 
+                beratSayur.setText(NumberFormat.getNumberInstance(Locale.US).format(clampedValue))
+                beratSayur.setSelection(beratSayur.text.length)
+                beratSayur.addTextChangedListener(this)
+            }
+            override fun afterTextChanged(s: Editable?) {
+            }
+        })
+        stokSayur.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val userInput = s.toString().replace(",", "")
+                stokSayur.removeTextChangedListener(this)
+                val intValue = userInput.toLongOrNull() ?: 0
+                val clampedValue = when {
+                    intValue < 0 -> {
+                        Toast.makeText(requireContext(), "Stok tidak boleh minus!", Toast.LENGTH_SHORT).show()
+                        1
+                    }
+                    else -> intValue
+                }
+                stokSayur.setText(NumberFormat.getNumberInstance(Locale.US).format(clampedValue))
+                stokSayur.setSelection(stokSayur.text.length)
+                stokSayur.addTextChangedListener(this)
+            }
+            override fun afterTextChanged(s: Editable?) {
+            }
+        })
         uploadText.setOnKeyListener { v, keyCode, event ->
             if (event.action == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_ENTER) {
                 if (isFileInAssets(requireContext(), this.uploadText.text.toString())) {
-                    // File exists in the assets folder, proceed with your logic
                     val bitmap: Bitmap? = handleKeyUpEvent(requireContext(),this.uploadText.text.toString())
                     bitmap?.let {
                         preview.setImageBitmap(bitmap)
                     }
                 } else {
-                    // File does not exist in the assets folder, handle accordingly
                     val bitmap: Bitmap? = handleKeyUpEvent(requireContext(),"notfound.jpg")
                     bitmap?.let {
                         preview.setImageBitmap(bitmap)
@@ -149,16 +214,20 @@ class addEditSayauranFragment : Fragment() {
         }
         saveBtn.setOnClickListener {
             if(namaSayur.text.isNotEmpty() && hargaSayur.text.isNotEmpty() && beratSayur.text.isNotEmpty() && stokSayur.text.isNotEmpty()){
+                val harga = hargaSayur.text.toString().replace(",", "")
+                val berat = beratSayur.text.toString().replace(",", "")
+                val jumlah = stokSayur.text.toString().replace(",", "")
                 if(getIdSayur != -1){
+                    val soldSayur = database.userDao().loadAllByIdsSayur(getIdSayur!!).sold
                     database.userDao().updateSayur(
                         Sayur(
                             getIdSayur,
                             namaSayur.text.toString(),
                             getIdUser,
-                            beratSayur.text.toString().toInt(),
-                            hargaSayur.text.toString().toInt(),
-                            0,
-                            stokSayur.text.toString().toInt(),
+                            berat.toInt(),
+                            harga.toInt(),
+                            soldSayur,
+                            jumlah.toInt(),
                             uploadText.text.toString()
                         )
                     )
@@ -168,10 +237,10 @@ class addEditSayauranFragment : Fragment() {
                             null,
                             namaSayur.text.toString(),
                             getIdUser,
-                            beratSayur.text.toString().toInt(),
-                            hargaSayur.text.toString().toInt(),
+                            berat.toInt(),
+                            harga.toInt(),
                             0,
-                            stokSayur.text.toString().toInt(),
+                            jumlah.toInt(),
                             uploadText.text.toString()
                         )
                     )
