@@ -65,7 +65,7 @@ class homeFragment : Fragment() {
         adapterCarousel = carouselAdapter(listSayur)
         database = activity?.let { AppDatabase.getInstance(it.applicationContext) }!!
         carousel.adapter = adapterCarousel
-        getData(getIdUser!!)
+        getData()
         nameTag = view.findViewById(R.id.nameUser)
         val user = database.userDao().loadAllByIds(getIdUser)
         val text = "Welcome Back\n${user.fullName}"
@@ -81,9 +81,9 @@ class homeFragment : Fragment() {
             }
         }
     }
-    fun getData(idPemilik : Int){
+    fun getData(){
         listSayur.clear()
-        database.userDao().getTop3SoldSayurByPemilik(idPemilik)?.let { listSayur.addAll(it) }
+        database.userDao().getTop3SoldSayurByPemilik()?.let { listSayur.addAll(it) }
         adapterCarousel.notifyDataSetChanged()
     }
 

@@ -399,6 +399,7 @@ class checkOutPage : Fragment() {
             }
 
         }
+        var loadAwal = true
         spinnerKota.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parentView: AdapterView<*>?,
@@ -417,7 +418,7 @@ class checkOutPage : Fragment() {
                     Log.d("chekk4", _kurir.text.toString())
                     getCost(cityAsalId[x],idChoosen,totalWeight[x],_kurir.text.toString().toLowerCase())
                 }
-
+                loadAwal = false
             }
 
             override fun onNothingSelected(parentView: AdapterView<*>?) {
@@ -433,6 +434,17 @@ class checkOutPage : Fragment() {
             ) {
                 _kurir.text = kurir[position]
                 courier = kurir[position]
+                if(!loadAwal){
+                    costArray.clear()
+//                showLoading()
+                    for (x in kotaAsal.indices){
+                        Log.d("chekk",cityAsalId[x])
+                        Log.d("chekk2", idChoosen)
+                        Log.d("chekk3", totalWeight[x].toString())
+                        Log.d("chekk4", _kurir.text.toString())
+                        getCost(cityAsalId[x],idChoosen,totalWeight[x],_kurir.text.toString().toLowerCase())
+                    }
+                }
             }
             override fun onNothingSelected(parentView: AdapterView<*>?) {
 
