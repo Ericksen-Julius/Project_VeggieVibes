@@ -99,7 +99,7 @@ class detailAccount : Fragment() {
         _alamat.text = data.alamat
         mFragmentManager = parentFragmentManager
         topUp.setOnClickListener {
-            showEditTextAlertDialog(requireContext(),getIdUser,data.fullName,data.email,data.password,data.phone,data.asalKota,data.alamat,data.namaToko)
+            showEditTextAlertDialog(requireContext(),getIdUser,data.fullName,data.email,data.password,data.phone, data.asalKota,data.alamat, data.namaToko)
         }
         edit.setOnClickListener {
             val bundle1 = Bundle()
@@ -250,7 +250,7 @@ class detailAccount : Fragment() {
                 )
             )
             dataUser = database.userDao().loadAllByIds(idUser)
-            this.emoney.text = "${dataUser.eMoney?.let { formatDecimal(it) }}"
+            this.emoney.text = "E-money: ${dataUser.eMoney?.let { formatDecimal(it) }}"
         }
 
         alertDialogBuilder.setNegativeButton("Cancel") { dialog: DialogInterface, which: Int ->

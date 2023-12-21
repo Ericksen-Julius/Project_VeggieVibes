@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.provider.OpenableColumns
@@ -19,10 +20,12 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
 import com.example.project.data.AppDatabase
+import com.example.project.data.OnFragmentInteractionListener
 import com.example.project.data.entity.Sayur
 import com.example.project.data.entity.User
 import java.io.IOException
 import java.lang.Exception
+import java.lang.RuntimeException
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -48,6 +51,8 @@ class addEditSayauranFragment : Fragment() {
     private lateinit var preview: ImageView
     private lateinit var database: AppDatabase
 
+    private var listener : OnFragmentInteractionListener? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -56,6 +61,31 @@ class addEditSayauranFragment : Fragment() {
         }
     }
 
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is OnFragmentInteractionListener){
+            listener = context
+        }else{
+            throw RuntimeException("$context must implement OnFragmentInteractionListener")
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        listener?.onFragmentColorChange(Color.parseColor("#D3D3D3"))
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        listener = null
+    }
+
+    override fun onPause() {
+        super.onPause()
+        // Notify the activity to reset the background color to white
+        listener?.onFragmentColorChange(Color.WHITE)
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -91,7 +121,10 @@ class addEditSayauranFragment : Fragment() {
             }
         }else{
             (super.requireActivity() as Home).setTitle("Add sayuran")
+
         }
+
+
 
 
         uploadText.setOnKeyListener { v, keyCode, event ->
@@ -167,14 +200,10 @@ class addEditSayauranFragment : Fragment() {
     }
     fun isFileInAssets(context: Context, fileName: String): Boolean {
         return try {
-            // Attempt to open the file
             val inputStream = context.assets.open(fileName)
-
-            // If the file exists, close the InputStream and return true
             inputStream.close()
             true
         } catch (e: IOException) {
-            // File not found or an IOException occurred
             false
         }
     }

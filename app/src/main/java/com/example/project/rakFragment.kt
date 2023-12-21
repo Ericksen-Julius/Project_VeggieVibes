@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.EditText
+import android.widget.Toast
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -66,15 +67,51 @@ class rakFragment : Fragment() {
         addButton = view.findViewById(R.id.floatingActionButton)
         val getIdUser = arguments?.getInt("uidUser")
         addButton.setOnClickListener {
-            val mFragmentManager: FragmentManager = parentFragmentManager
-            val bundle = Bundle()
-            bundle.putInt("uidUser",getIdUser ?: 0)
-            val mfAdd = addEditSayauranFragment()
-            mfAdd.arguments = bundle
-            mFragmentManager.beginTransaction().apply {
-                replace(R.id.frameContainer,mfAdd,addEditSayauranFragment::class.java.simpleName)
-                addToBackStack(null)
-                commit()
+            if(database.userDao().loadAllByIds(getIdUser).namaToko == null){
+                val editText = EditText(context)
+                editText.hint = "Enter store name..."
+                val dialog = AlertDialog.Builder(context)
+                    .setTitle("Store Name")
+                    .setView(editText)
+                    .setPositiveButton("Save") { _, _ ->
+                        // Handle user input from the EditText
+                        val enteredText = editText.text.toString()
+                        if (enteredText.isNotEmpty()){
+                            database.userDao().updateToko(
+                                enteredText,
+                                getIdUser!!
+                            )
+                            val mFragmentManager: FragmentManager = parentFragmentManager
+                            val bundle = Bundle()
+                            bundle.putInt("uidUser",getIdUser ?: 0)
+                            val mfAdd = addEditSayauranFragment()
+                            mfAdd.arguments = bundle
+                            mFragmentManager.beginTransaction().apply {
+                                replace(R.id.frameContainer,mfAdd,addEditSayauranFragment::class.java.simpleName)
+                                addToBackStack(null)
+                                commit()
+                            }
+                        }else{
+                            Toast.makeText(context,"Inputan tidak boleh kosong",Toast.LENGTH_SHORT).show()
+                        }
+
+                    }
+                    .setNegativeButton("Cancel") { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                    .create()
+                dialog.show()
+            }else{
+                val mFragmentManager: FragmentManager = parentFragmentManager
+                val bundle = Bundle()
+                bundle.putInt("uidUser",getIdUser ?: 0)
+                val mfAdd = addEditSayauranFragment()
+                mfAdd.arguments = bundle
+                mFragmentManager.beginTransaction().apply {
+                    replace(R.id.frameContainer,mfAdd,addEditSayauranFragment::class.java.simpleName)
+                    addToBackStack(null)
+                    commit()
+                }
             }
         }
         mFragmentManager = parentFragmentManager
@@ -98,8 +135,29 @@ class rakFragment : Fragment() {
                             commit()
                         }
                     }else if(which == 1){
-                        database.userDao().deleteSayur(listSayur[position])
                         getData(getIdUser?:0)
+                        AlertDialog.Builder(requireContext())
+                            .setTitle("Delete " + listSayur[position].nama)
+                            .setPositiveButton(
+                                "HAPUS",DialogInterface.OnClickListener{
+                                        dialog, which ->
+                                    database.userDao().deleteSayur(listSayur[position])
+                                    listSayur.removeAt(position)
+                                    adapterP.notifyDataSetChanged()
+                                    dialog.dismiss()
+                                    Toast.makeText(
+                                        requireContext(),
+                                        "Data Successfully Deleted",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+
+                                }
+                            )
+                            .setNegativeButton(
+                                "BATAL",DialogInterface.OnClickListener { dialog, which ->
+                                    dialog.dismiss()
+                                }
+                            ).show()
                     }else if(which == 2){
                         val bundle = Bundle()
                         bundle.putInt("sayurId",listSayur[position].uidSayur?:0)

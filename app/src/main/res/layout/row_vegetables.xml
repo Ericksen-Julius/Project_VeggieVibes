@@ -1,9 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginBottom="10px"
+    android:layout_height="wrap_content">
+
+
+<LinearLayout
+    android:layout_width="340dp"
+    android:layout_height="110dp"
+    android:layout_centerHorizontal="true"
+    android:layout_marginBottom="20dp"
+    android:gravity="center"
     android:orientation="horizontal"
+    android:elevation="8dp"
     android:background="@drawable/item_border">
 
     <ImageView
@@ -24,12 +33,15 @@
 
         <TextView
             android:id="@+id/namaSayur"
-            android:layout_width="wrap_content"
+            android:layout_width="154dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:fontFamily="serif"
             android:text="Nama"
+
             android:textColor="@android:color/black"
-            android:textSize="24sp" />
+            android:textSize="24sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/hargaSayur"
@@ -37,8 +49,10 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
             android:text="Harga"
-            android:textColor="@android:color/black"
-            android:textSize="24sp" />
+            android:fontFamily="serif"
+            android:textColor="#A020F0"
+            android:textSize="15sp"
+            android:textStyle="bold" />
 
     </LinearLayout>
 
@@ -54,3 +68,4 @@
 
 </LinearLayout>
 
+</RelativeLayout>
