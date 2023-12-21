@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,69 +7,64 @@
     android:layout_height="match_parent"
     tools:context=".detailAccount">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <ImageView
+        android:id="@+id/accountImage"
+        android:layout_width="85dp"
+        android:layout_height="85dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/user"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout13"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <ImageView
-            android:layout_width="276dp"
-            android:layout_height="176dp"
-            android:layout_marginTop="-70dp"
-            android:src="@drawable/baseline_circle_24"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.496"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:id="@+id/accountImage"
-            android:layout_width="85dp"
-            android:layout_height="85dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="36dp"
-            android:src="@drawable/user"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="30dp"
+        android:orientation="vertical"
+        android:background="@drawable/gradient"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/accountImage">
 
         <LinearLayout
             android:id="@+id/linearLayout7"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="10dp"
             android:layout_marginEnd="20dp"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.487"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/accountImage">
-
-            <TextView
-                android:id="@+id/fullname"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="9"
-                android:text="Nama"
-                android:textColor="@color/black"
-                android:textSize="18sp"
-                tools:layout_editor_absoluteX="16dp"
-                tools:layout_editor_absoluteY="182dp" />
+            android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:layout_weight="0.1"
                 android:src="@drawable/baseline_person_24" />
+
+            <TextView
+                android:id="@+id/fullname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="10dp"
+                android:layout_weight="9"
+                android:text="Nama"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
         </LinearLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="2dp"
-            android:background="@color/black"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout7" />
+            android:layout_marginStart="65dp"
+            android:layout_marginEnd="20dp"
+            android:background="@color/white" />
 
         <LinearLayout
             android:id="@+id/linearLayout8"
@@ -78,22 +73,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="20dp"
             android:layout_marginEnd="20dp"
-            android:background="@drawable/profile_border"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout7">
-
-            <TextView
-                android:id="@+id/email"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="Email"
-                android:layout_weight="9"
-                android:textSize="24sp"
-                tools:layout_editor_absoluteX="104dp"
-                tools:layout_editor_absoluteY="467dp" />
+            android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="36dp"
@@ -101,7 +81,25 @@
                 android:layout_weight="0.1"
                 android:src="@drawable/baseline_email_24" />
 
+            <TextView
+                android:id="@+id/email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="10dp"
+                android:layout_weight="9"
+                android:text="Email"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+
         </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginStart="65dp"
+            android:layout_marginEnd="20dp"
+            android:background="@color/white" />
 
         <LinearLayout
             android:id="@+id/linearLayout9"
@@ -110,23 +108,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="20dp"
             android:layout_marginEnd="20dp"
-            android:background="@drawable/profile_border"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.466"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout8">
-
-            <TextView
-                android:id="@+id/phone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="No telpon"
-                android:layout_weight="9"
-                android:textSize="24sp"
-                tools:layout_editor_absoluteX="47dp"
-                tools:layout_editor_absoluteY="522dp" />
+            android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="36dp"
@@ -134,7 +116,25 @@
                 android:layout_weight="0.1"
                 android:src="@drawable/baseline_phone_24" />
 
+            <TextView
+                android:id="@+id/phone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="10dp"
+                android:layout_weight="9"
+                android:text="No telp"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+
         </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginStart="65dp"
+            android:layout_marginEnd="20dp"
+            android:background="@color/white" />
 
         <LinearLayout
             android:id="@+id/linearLayout10"
@@ -143,23 +143,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="20dp"
             android:layout_marginEnd="20dp"
-            android:background="@drawable/profile_border"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.465"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout9">
-
-            <TextView
-                android:id="@+id/eMoney"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="E-money"
-                android:layout_weight="9"
-                android:textSize="24sp"
-                tools:layout_editor_absoluteX="270dp"
-                tools:layout_editor_absoluteY="662dp" />
+            android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="36dp"
@@ -168,7 +152,25 @@
                 android:layout_weight="0.1"
                 android:src="@drawable/baseline_attach_money_24" />
 
+            <TextView
+                android:id="@+id/eMoney"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="10dp"
+                android:layout_weight="9"
+                android:text="E-money"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+
         </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginStart="65dp"
+            android:layout_marginEnd="20dp"
+            android:background="@color/white" />
 
         <LinearLayout
             android:id="@+id/linearLayout11"
@@ -177,23 +179,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="20dp"
             android:layout_marginEnd="20dp"
-            android:background="@drawable/profile_border"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.444"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout10">
-
-            <TextView
-                android:id="@+id/asalKota"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="Asal kota"
-                android:layout_weight="9"
-                android:textSize="24sp"
-                tools:layout_editor_absoluteX="262dp"
-                tools:layout_editor_absoluteY="490dp" />
+            android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="36dp"
@@ -201,7 +187,25 @@
                 android:layout_weight="0.1"
                 android:src="@drawable/baseline_location_city_24" />
 
+            <TextView
+                android:id="@+id/asalKota"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="10dp"
+                android:layout_weight="9"
+                android:text="City"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+
         </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginStart="65dp"
+            android:layout_marginEnd="20dp"
+            android:background="@color/white" />
 
         <LinearLayout
             android:id="@+id/linearLayout12"
@@ -210,23 +214,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="20dp"
             android:layout_marginEnd="20dp"
-            android:background="@drawable/profile_border"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.444"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout11">
-
-            <TextView
-                android:id="@+id/alamat"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="Alamat"
-                android:layout_weight="9"
-                android:textSize="24sp"
-                tools:layout_editor_absoluteX="43dp"
-                tools:layout_editor_absoluteY="535dp" />
+            android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="36dp"
@@ -234,53 +222,133 @@
                 android:layout_weight="0.1"
                 android:src="@drawable/baseline_location_on_24" />
 
+            <TextView
+                android:id="@+id/alamat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="10dp"
+                android:layout_weight="9"
+                android:text="Address"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+
         </LinearLayout>
 
-        <Button
-            android:id="@+id/editAccount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="16dp"
-            android:backgroundTint="@color/snapchat"
-            android:text="Edit Account"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/topUp" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginStart="65dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="15dp"
+            android:background="@color/white" />
+    </LinearLayout>
 
-        <Button
-            android:id="@+id/topUp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="24dp"
-            android:backgroundTint="@color/mint_green"
-            android:text="Top Up"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout12" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="22dp"
+        android:orientation="vertical"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout13">
 
-        <Button
-            android:id="@+id/btnDel"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="16dp"
-            android:backgroundTint="@color/red"
-            android:text="Delete Account"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editAccount" />
+            android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/logOut"
-            android:layout_width="wrap_content"
+            <ImageView
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_weight="0.1"
+                android:src="@drawable/baseline_edit_24" />
+
+            <Button
+                android:id="@+id/editAccount"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="9"
+                android:layout_marginStart="5dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:text="Edit Account"
+                android:textAlignment="textStart"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="20dp"
-            android:backgroundTint="@color/blue"
-            android:text="Log Out"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btnDel" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:orientation="horizontal"
+            android:layout_marginTop="15dp">
 
-</ScrollView>
+            <ImageView
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_weight="0.1"
+                android:src="@drawable/baseline_credit_card_24" />
+
+            <Button
+                android:id="@+id/topUp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="5dp"
+                android:text="Top Up"
+                android:layout_weight="9"
+                android:textAlignment="textStart"
+                android:background="?android:attr/selectableItemBackground"
+                android:textSize="16sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="15dp">
+
+            <ImageView
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_weight="0.1"
+                android:src="@drawable/baseline_delete_24" />
+
+            <Button
+                android:id="@+id/btnDel"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Delete Account"
+                android:layout_marginStart="5dp"
+                android:layout_weight="9"
+                android:textAlignment="textStart"
+                android:background="?android:attr/selectableItemBackground"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="15dp">
+
+            <ImageView
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_weight="0.1"
+                android:src="@drawable/baseline_logout_24" />
+
+            <Button
+                android:id="@+id/logOut"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Log Out"
+                android:layout_marginStart="5dp"
+                android:layout_weight="9"
+                android:textAlignment="textStart"
+                android:background="?android:attr/selectableItemBackground"
+                android:textSize="16sp"/>
+        </LinearLayout>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
