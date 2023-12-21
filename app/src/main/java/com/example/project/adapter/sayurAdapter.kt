@@ -24,6 +24,7 @@ data class sayurAdapter(
         var namaSayur: TextView = itemView.findViewById(R.id.namaSayur)
         var hargaSayur: TextView = itemView.findViewById(R.id.hargaSayur)
         var buttonDialog : ImageView = itemView.findViewById(R.id.menuIcon)
+        var _stok : TextView = itemView.findViewById(R.id.stok)
 //        init{
 //            itemView.setOnClickListener {
 //                OnItemClickCallBack.onItemClick(layoutPosition)
@@ -62,6 +63,7 @@ data class sayurAdapter(
         holder.buttonDialog.setOnClickListener {
             OnItemClickCallBack.onItemClick(position)
         }
+        holder._stok.text = "Stok: ${sayur.stok.toString()}"
     }
     private fun decodeImage(context: Context, filename: String): Bitmap? {
         return try {

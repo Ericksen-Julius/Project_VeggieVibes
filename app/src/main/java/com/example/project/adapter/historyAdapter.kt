@@ -3,6 +3,7 @@ package com.example.project.adapter
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.media.Image
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,6 +34,8 @@ data class historyAdapter(
         var waktukirim: TextView = itemView.findViewById(R.id.waktuOrder)
         var totalHarga: TextView = itemView.findViewById(R.id.totalharga)
         var waktusampai : TextView = itemView.findViewById(R.id.waktuSampai)
+        var btnDelete : ImageView = itemView.findViewById(R.id.btnDelete)
+        var alamat : TextView = itemView.findViewById(R.id.alamatHistory)
 
         init {
             itemView.setOnClickListener {
@@ -47,6 +50,7 @@ data class historyAdapter(
 
     interface onItemClickCallBack{
         fun toDetail(position: Int)
+        fun deleteHistory(position: Int)
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListViewHolder {
         val view : View = LayoutInflater.from(parent.context)
@@ -105,10 +109,14 @@ data class historyAdapter(
         val time = order.waktuDatang
         val time2 = order.waktuSampai
         val formatteddate = sdf.format(time)
-        holder.waktukirim.text = "Waktu Pesan: " + formatteddate.toString()
+        holder.waktukirim.text = "Waktu Pesan\n" + formatteddate.toString()
         val formatteddate2 = sdf.format(time2)
-        holder.waktusampai.text = "Waktu Sampai: "+formatteddate2.toString()
+        holder.waktusampai.text = "Waktu Sampai\n"+formatteddate2.toString()
         holder.totalHarga.text = "Rp. $formattedPrice"
+        holder.btnDelete.setOnClickListener {
+            this.OnItemClickCallBack.deleteHistory(position)
+        }
+        holder.alamat.text = "Alamat: ${order.alamat}"
     }
 
     fun formatDecimal(number: Int): String {

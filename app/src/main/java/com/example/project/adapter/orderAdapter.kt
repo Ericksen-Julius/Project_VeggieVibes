@@ -33,6 +33,7 @@ data class orderAdapter(
         var waktu: TextView = itemView.findViewById(R.id.waktuOrder)
         var totalHarga: TextView = itemView.findViewById(R.id.totalharga)
         var btnDone : Button = itemView.findViewById(R.id.btnDone)
+        var alamat : TextView = itemView.findViewById(R.id.alamatongoing)
         init {
             itemView.setOnClickListener {
                 OnItemClickCallBack.toDetail(position)
@@ -103,11 +104,12 @@ data class orderAdapter(
         val sdf = SimpleDateFormat(pattern, Locale("id", "ID"))
         val time = order.waktuDatang
         val formatteddate = sdf.format(time)
-        holder.waktu.text = formatteddate.toString()
+        holder.waktu.text = "Waktu Pesan\n${formatteddate.toString()}"
         holder.totalHarga.text = "Rp. $formattedPrice"
         holder.btnDone.setOnClickListener {
             this.OnItemClickCallBack.onItemDone(order)
         }
+        holder.alamat.text = "Alamat: ${order.alamat}"
     }
 
     fun formatDecimal(number: Int): String {

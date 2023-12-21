@@ -86,7 +86,8 @@ class Ongoing : Fragment() {
                             "Done",
                             order.totalHarga,
                             order.waktuDatang,
-                            currentDate
+                            currentDate,
+                            order.alamat
                         )
                     )
 //                Log.d("database update status",position.toString())

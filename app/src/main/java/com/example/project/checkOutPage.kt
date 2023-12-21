@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.Spinner
 import android.widget.TextView
@@ -163,13 +164,24 @@ class checkOutPage : Fragment() {
                     for (x in hasil_cost!!.rajaongkir!!.results?.get(0)!!.costs!!){
                         if (x != null) {
                             x.cost!![0]!!.value?.let { costArray.add(it) }
-                        }
-                        if (origin == cityAsalId[cityAsalId.size-1]){
-                            _cost.text = "Rp.${formatDecimal(costArray.sum())}"
-                            _harga.text = "Rp.${formatDecimal(subTotal + costArray.sum())}"
-                            unshowLoading()
+                            if (costArray.size == cityAsalId.size){
+                                Log.d("origin",origin)
+                                Log.d("x.cost", x.cost!![0]!!.value.toString())
+                                Log.d("city asal id",cityAsalId.toString())
+                                _cost.text = "Rp.${formatDecimal(costArray.sum())}"
+                                Log.d("cek ongkir cost",costArray.sum().toString())
+                                _harga.text = "Rp.${formatDecimal(subTotal + costArray.sum())}"
+                                unshowLoading()
+//                                return
+                            }
                             return
                         }
+//                        if (origin == cityAsalId[cityAsalId.size-1]){
+//                            _cost.text = "Rp.${formatDecimal(costArray.sum())}"
+//                            _harga.text = "Rp.${formatDecimal(subTotal + costArray.sum())}"
+//                            unshowLoading()
+//                            return
+//                        }
                     }
                 }
             }
@@ -291,6 +303,8 @@ class checkOutPage : Fragment() {
         val getIdUser = arguments?.getInt("uidUser")
         database = activity?.let { AppDatabase.getInstance(it.applicationContext) }!!
         val dataKeranjang = database.userDao().loadKeranjangById(getIdUser)
+        var alamat : EditText = view.findViewById(R.id.alamat)
+        alamat.setText(database.userDao().loadAllByIds(getIdUser).alamat)
         var kotaAsal = ArrayList<String>()
         var totalWeight = ArrayList<Int>()
         var totalPrice = ArrayList<Int>()
@@ -425,7 +439,7 @@ class checkOutPage : Fragment() {
             }
         }
         buttonCheckOut.setOnClickListener {
-            checkOnClick(getIdUser,kotaAsal,totalPrice,totalWeight,costArray,dataKeranjang,sayurIdKeranjang,totalSold)
+            checkOnClick(getIdUser,kotaAsal,totalPrice,totalWeight,costArray,dataKeranjang,sayurIdKeranjang,totalSold,alamat.text.toString())
         }
     }
 
@@ -437,8 +451,10 @@ class checkOutPage : Fragment() {
         arrayCost: ArrayList<Int>,
         dataKeranjang: List<Keranjang>,
         idSayur: ArrayList<Int>,
-        totalSold: ArrayList<Int>
+        totalSold: ArrayList<Int>,
+        alamat : String
     ){
+        Log.d("cek ongkir",arrayCost.sum().toString())
         val alertDialogBuilder = AlertDialog.Builder(context)
         var textMessage = ""
         for (x in array1.indices){
@@ -462,7 +478,8 @@ class checkOutPage : Fragment() {
                         "Shipping",
                         array2.sum() + arrayCost.sum(),
                         currentDate,
-                        null
+                        null,
+                        alamat
                     )
                 )
                 for (x in idSayur.indices){

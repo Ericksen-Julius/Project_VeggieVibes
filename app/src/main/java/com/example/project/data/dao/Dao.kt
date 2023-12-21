@@ -103,4 +103,8 @@ interface UserDao {
     @Insert
     fun insertAllOrder(vararg order: Order)
 
+    @Delete
+    fun deleteHistory(order: Order)
+
+
 }

@@ -20,6 +20,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import com.example.project.data.AppDatabase
 import com.example.project.data.OnFragmentInteractionListener
@@ -54,6 +55,7 @@ class addEditSayauranFragment : Fragment() {
     private lateinit var saveBtn: Button
     private lateinit var preview: ImageView
     private lateinit var database: AppDatabase
+    private lateinit var judul : TextView
 
     private var listener : OnFragmentInteractionListener? = null
 
@@ -106,6 +108,7 @@ class addEditSayauranFragment : Fragment() {
         stokSayur = view.findViewById(R.id.stokSayur)
         saveBtn = view.findViewById(R.id.saveSayur)
         preview = view.findViewById(R.id.imagePreview)
+        judul = view.findViewById(R.id.judul)
         uploadText = view.findViewById(R.id.fotoSayur)
         database = AppDatabase.getInstance(requireContext())
         val getIdUser = arguments?.getInt("uidUser")
@@ -113,6 +116,7 @@ class addEditSayauranFragment : Fragment() {
 //        Log.d("hey", getIdUser.toString())
         if(getIdSayur != -1){
             (super.requireActivity() as Home).setTitle("Edit sayuran")
+            judul.text = "Edit Vegetable"
             val dataSayur = database.userDao().loadAllByIdsSayur(getIdSayur?:0)
             namaSayur.setText(dataSayur.nama)
             hargaSayur.setText(dataSayur.harga.toString())
@@ -125,6 +129,7 @@ class addEditSayauranFragment : Fragment() {
             }
         }else{
             (super.requireActivity() as Home).setTitle("Add sayuran")
+            judul.text = "Add New Vegetable"
 
         }
         hargaSayur.addTextChangedListener(object : TextWatcher {

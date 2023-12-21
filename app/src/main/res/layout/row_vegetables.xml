@@ -6,8 +6,8 @@
 
 
 <LinearLayout
-    android:layout_width="340dp"
-    android:layout_height="110dp"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:layout_centerHorizontal="true"
     android:layout_marginBottom="20dp"
     android:gravity="center"
@@ -47,12 +47,22 @@
             android:id="@+id/hargaSayur"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="10dp"
             android:text="Harga"
             android:fontFamily="serif"
             android:textColor="#A020F0"
             android:textSize="15sp"
             android:textStyle="bold" />
+        <TextView
+            android:id="@+id/stok"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:fontFamily="serif"
+            android:textStyle="bold"
+            android:text="Stok"
+            android:textSize="15sp"
+            />
 
     </LinearLayout>
 

@@ -1,6 +1,7 @@
 package com.example.project
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -14,6 +15,7 @@ import com.example.project.adapter.historyAdapter
 import com.example.project.adapter.orderAdapter
 import com.example.project.data.AppDatabase
 import com.example.project.data.entity.Order
+import java.util.Date
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -78,6 +80,22 @@ class History : Fragment() {
                     addToBackStack(null)
                     commit()
                 }
+            }
+
+            override fun deleteHistory(position: Int) {
+                val alertDialogBuilder = AlertDialog.Builder(context)
+                alertDialogBuilder.setTitle("Konfirmasi")
+                alertDialogBuilder.setMessage("Apakah anda yakin ingin menghapus transaksi ini ?")
+                alertDialogBuilder.setPositiveButton("Ya") { dialog, which ->
+                    database.userDao().deleteHistory(listOrders[position])
+                    getData(getIdUser?:0)
+//                Log.d("database update status",position.toString())
+                }
+                alertDialogBuilder.setNegativeButton("Batal"){dialog,which->
+                    dialog.dismiss()
+                }
+                val dialog = alertDialogBuilder.create()
+                dialog.show()
             }
 
         })
