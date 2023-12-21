@@ -51,7 +51,7 @@ class homeFragment : Fragment() {
         database = activity?.let { AppDatabase.getInstance(it.applicationContext) }!!
         nameTag = view.findViewById(R.id.nameUser)
         val user = database.userDao().loadAllByIds(getIdUser)
-        val text = "Hi, ${user.fullName}"
+        val text = "Welcome Back, ${user.fullName}"
         val buyProducts = view.findViewById<Button>(R.id.btnBuyProducts)
         nameTag.text = text
         buyProducts.setOnClickListener {

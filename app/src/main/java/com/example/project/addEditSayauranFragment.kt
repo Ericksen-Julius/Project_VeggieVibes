@@ -121,12 +121,7 @@ class addEditSayauranFragment : Fragment() {
             }
         }else{
             (super.requireActivity() as Home).setTitle("Add sayuran")
-
         }
-
-
-
-
         uploadText.setOnKeyListener { v, keyCode, event ->
             if (event.action == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_ENTER) {
                 if (isFileInAssets(requireContext(), this.uploadText.text.toString())) {
