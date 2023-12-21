@@ -21,18 +21,19 @@ import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
 
-data class orderAdapter(
+data class historyAdapter(
     private val listOrder: List<Order>
-) : RecyclerView.Adapter<orderAdapter.ListViewHolder>(){
+) : RecyclerView.Adapter<historyAdapter.ListViewHolder>(){
     private lateinit var context: Context // Added context property
     private lateinit var database : AppDatabase
     private lateinit var OnItemClickCallBack : onItemClickCallBack
 
     inner class ListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         var namaToko: TextView = itemView.findViewById(R.id.namaToko)
-        var waktu: TextView = itemView.findViewById(R.id.waktuOrder)
+        var waktukirim: TextView = itemView.findViewById(R.id.waktuOrder)
         var totalHarga: TextView = itemView.findViewById(R.id.totalharga)
-        var btnDone : Button = itemView.findViewById(R.id.btnDone)
+        var waktusampai : TextView = itemView.findViewById(R.id.waktuSampai)
+
         init {
             itemView.setOnClickListener {
                 OnItemClickCallBack.toDetail(position)
@@ -45,15 +46,15 @@ data class orderAdapter(
     }
 
     interface onItemClickCallBack{
-        fun onItemDone(order: Order)
         fun toDetail(position: Int)
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListViewHolder {
         val view : View = LayoutInflater.from(parent.context)
-            .inflate(R.layout.row_history,parent,false)
+            .inflate(R.layout.row_history2,parent,false)
         context = parent.context
         return ListViewHolder(view)
     }
+
 
     override fun getItemCount(): Int {
         return listOrder.size
@@ -102,12 +103,12 @@ data class orderAdapter(
         val pattern = "dd MMM yyyy, HH:mm"
         val sdf = SimpleDateFormat(pattern, Locale("id", "ID"))
         val time = order.waktuDatang
+        val time2 = order.waktuSampai
         val formatteddate = sdf.format(time)
-        holder.waktu.text = formatteddate.toString()
+        holder.waktukirim.text = "Waktu Pesan: " + formatteddate.toString()
+        val formatteddate2 = sdf.format(time2)
+        holder.waktusampai.text = "Waktu Sampai: "+formatteddate2.toString()
         holder.totalHarga.text = "Rp. $formattedPrice"
-        holder.btnDone.setOnClickListener {
-            this.OnItemClickCallBack.onItemDone(order)
-        }
     }
 
     fun formatDecimal(number: Int): String {
