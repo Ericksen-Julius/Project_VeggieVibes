@@ -1,10 +1,19 @@
 package com.example.project
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import androidx.fragment.app.FragmentManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.project.adapter.historyAdapter
+import com.example.project.adapter.orderAdapter
+import com.example.project.data.AppDatabase
+import com.example.project.data.entity.Order
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -20,6 +29,11 @@ class History : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+    private lateinit var database: AppDatabase
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var adapterHistory : historyAdapter
+    private lateinit var mFragmentManager: FragmentManager
+    private var listOrders : MutableList<Order> = mutableListOf<Order>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,8 +55,40 @@ class History : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 //        val outerFragment = requireActivity().supportFragmentManager.findFragmentById(R.id.frameContainerOrders) as? Orders
 //        outerFragment?.underLine()
+        recyclerView = view.findViewById(R.id.rvHistory)
+        adapterHistory = historyAdapter(listOrders)
+        database = activity?.let { AppDatabase.getInstance(it.applicationContext) }!!
+        mFragmentManager = parentFragmentManager
+        val adapterP = adapterHistory
+        val getIdUser = arguments?.getInt("uidUser")
+        recyclerView.adapter = adapterP
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        getData(getIdUser?:0)
+        adapterP.setOnItemClickCallBack(object : historyAdapter.onItemClickCallBack{
+            override fun toDetail(position: Int) {
+                val bundle1 = Bundle()
+                if (getIdUser != null) {
+                    listOrders[position].uid_user?.let { bundle1.putInt("uid_user", it) }
+                    listOrders[position].uidorder?.let { bundle1.putInt("uid_order", it) }
+                }
+                val mfAccount = DetailOrder()
+                mfAccount.arguments = bundle1
+                mFragmentManager.beginTransaction().apply {
+                    replace(R.id.frameContainerOrders,mfAccount,DetailOrder::class.java.simpleName)
+                    addToBackStack(null)
+                    commit()
+                }
+            }
+
+        })
     }
 
+    @SuppressLint("NotifyDataSetChanged")
+    fun getData(idPemilik : Int){
+        listOrders.clear()
+        listOrders.addAll((database.userDao().loadListOrder(idPemilik,"Done")))
+        adapterHistory.notifyDataSetChanged()
+    }
     companion object {
         /**
          * Use this factory method to create a new instance of

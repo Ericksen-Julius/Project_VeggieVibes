@@ -1,6 +1,8 @@
 package com.example.project
 
 import android.annotation.SuppressLint
+import android.graphics.Paint
+import android.graphics.Typeface
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.UnderlineSpan
@@ -11,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.fragment.app.FragmentManager
+import com.example.project.adapter.historyAdapter
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -42,10 +45,26 @@ class Orders : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        (super.requireActivity() as Home).setTitle("Orders")
         btnHistory = view.findViewById(R.id.btnHistory)
         btnOngoing = view.findViewById(R.id.btnOngoing)
         mFragmentManager = childFragmentManager
         var getIdUser = arguments?.getInt("uidUser")
+        val bundle1 = Bundle()
+        if (getIdUser != null) {
+            bundle1.putInt("uidUser",getIdUser)
+        }
+        val mfAccount = History()
+        mfAccount.arguments = bundle1
+        mFragmentManager.beginTransaction().apply {
+            replace(R.id.frameContainerOrders,mfAccount,History::class.java.simpleName)
+            addToBackStack(null)
+            commit()
+        }
+        removeUnderline(btnOngoing)
+        removeUnderline(btnHistory)
+
+        setUnderlineText(btnHistory)
 
 
         btnHistory.setOnClickListener {
@@ -62,6 +81,11 @@ class Orders : Fragment() {
                 addToBackStack(null)
                 commit()
             }
+
+            removeUnderline(btnOngoing)
+            removeUnderline(btnHistory)
+
+            setUnderlineText(btnHistory)
         }
 
         btnOngoing.setOnClickListener {
@@ -78,19 +102,11 @@ class Orders : Fragment() {
                 addToBackStack(null)
                 commit()
             }
-        }
-    }
+            removeUnderline(btnOngoing)
+            removeUnderline(btnHistory)
 
-    fun underLine(text : TextView){
-        val mString = text.toString()
-        val mSpannableString = SpannableString(mString)
-        mSpannableString.setSpan(UnderlineSpan(),0,mSpannableString.length,0)
-        text.text = mSpannableString
-    }
-    fun cancelUnderLine(text : TextView){
-        val mString = text.toString()
-        val normalSpannableString = SpannableString(mString)
-        text.text =normalSpannableString
+            setUnderlineText(btnOngoing)
+        }
     }
 
     override fun onCreateView(
@@ -111,6 +127,17 @@ class Orders : Fragment() {
             .commit()
 
         return view
+    }
+
+
+    private fun setUnderlineText(textView: TextView) {
+        textView.paintFlags = textView.paintFlags or Paint.UNDERLINE_TEXT_FLAG
+        textView.setTypeface(null, Typeface.BOLD)
+    }
+
+    private fun removeUnderline(textView: TextView) {
+        textView.paintFlags = textView.paintFlags and Paint.UNDERLINE_TEXT_FLAG.inv()
+        textView.setTypeface(null, Typeface.NORMAL)
     }
 
     companion object {
